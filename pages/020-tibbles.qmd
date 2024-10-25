@@ -1,0 +1,254 @@
+---
+title: Tibbles and filters
+---
+
+
+
+As you may remember from the [Intermediate R workshop](https://bristol-training.github.io/intermediate-r/), R is great at representing and manipulating tabular data. In "traditional" R, this was handled in `data.frame`, while in modern "tidyverse" R this is handled via a `tibble`.
+
+```{r}
+library(tidyverse)
+```
+
+A `tibble` is a two (or possibly more) dimensional table of data.
+
+```{r}
+census <- tibble("City"=c("Paris", "Paris", "Paris", "Paris",
+                          "London", "London", "London", "London",
+                          "Rome", "Rome", "Rome", "Rome"),
+                 "year"=c(2001, 2008, 2009, 2010,
+                          2001, 2006, 2011, 2015,
+                          2001, 2006, 2009, 2012),
+                 "pop"=c(2.148, 2.211, 2.234, 2.244,
+                         7.322, 7.657, 8.174, 8.615,
+                         2.547, 2.627, 2.734, 2.627))
+```
+
+This has created a `tibble` that we have assigned to the variable `census`. The column names are the keys (`City`, `year` and `pop`), while the  data for each column is given in the values (the lists).
+
+You can print a summary of the tibble via:
+
+```{r}
+census
+```
+
+
+Note that R will default to interpreting numbers as floating point (`dbl`). While
+this is correct for the `pop` (population) column, this is the wrong choice for 
+the year. A better choice would be an integer. To force this, use `as.integer`
+to set the data type for the year column;
+
+```{r}
+census <- tibble("City"=c("Paris", "Paris", "Paris", "Paris",
+                          "London", "London", "London", "London",
+                          "Rome", "Rome", "Rome", "Rome"),
+                 "year"=as.integer(c(2001, 2008, 2009, 2010,
+                                     2001, 2006, 2011, 2015,
+                                     2001, 2006, 2009, 2012)),
+                 "pop"=c(2.148, 2.211, 2.234, 2.244,
+                         7.322, 7.657, 8.174, 8.615,
+                         2.547, 2.627, 2.734, 2.627))
+
+census
+```
+
+will print
+
+
+
+You access the contents of a `tibble` mostly by column, e.g.
+
+```{r}
+census["City"]
+```
+
+will return a `tibble` of just a single column containing the `City` data.
+
+You can also access the columns by their index, e.g.
+
+```{r}
+census[1]
+```
+
+will return the first column, so is identical to `census["City"]`.
+
+You can also extract multiple columns by specifying them via `c( )`, e.g.
+
+```{r}
+census[c("City", "year")]
+```
+
+will return a `tibble` with the `City` and `year` columns.
+
+To access data by rows, you need to pass in the row index followed by a comma, e.g.
+
+```{r}
+census[1, ]
+```
+
+will return a `tibble` containing just the first row of data.
+
+You can use ranges to get several rows, e.g.
+
+```{r}
+census[1:5, ]
+```
+
+would return the first five rows, while
+
+```{r}
+census[seq(2, 10, 2), ]
+```
+
+would return the even rows from 2 to 10.
+
+You can access specific rows and columns via `[row, column]`, e.g.
+
+```{r}
+census[1, 1]
+```
+
+returns a `tibble` containing just the first row and first column, while
+
+```{r}
+census[seq(2, 10, 2), "year"]
+```
+
+would return the `year` column of the even rows from 2 to 10, and
+
+```{r}
+census[5, 2:3]
+```
+
+would return the second and third columns of the fifth row.
+
+The above functions all return a `tibble` that is a subset of the whole `tibble`. You 
+can extract the data for a single column as a list via `[[ ]]` or `$`, e.g.
+
+```{r}
+census[[1]]
+census[["City"]]
+census$City
+```
+
+and can then extract data from those lists via sub-indexing, e.g.
+
+```{r}
+census$City[1]
+```
+
+would return the `City` column data for the first row.
+
+## Querying
+
+We can start to ask questions of our data using the `filter` function.
+
+```{r}
+census %>% filter(City=="Paris")
+```
+
+
+(note that we didn't need to put double quotes around `City` in the filter - 
+it knows that this is a column name. Also, 
+[look here](https://bristol-training.github.io/intermediate-r/pages/042-tidyverse-pipe.html) if you need
+to refresh your knowledge of the `%>%` operator).
+
+This has returned a new `tibble`, which you can then access using the same
+methods as above, e.g.
+
+```{r}
+(census %>% filter(City=="Paris"))["year"]
+```
+
+You can also test if the rows of a `tibble` match a condition, e.g.
+
+```{r}
+census["City"] == "Paris"
+```
+
+returns a set of `TRUE` / `FALSE` values for each row, depending on whether
+the `City` value of that row was equal to `Paris`.
+
+
+
+## Adding new columns
+
+New columns can be added to a `tibble` simply by assigning them by 
+index (as you would for a dictionary);
+
+```{r}
+census["continental"] <- census["City"] != "London"
+census
+```
+
+
+
+
+::: {#exerciseN .callout-note icon=false title='Exercise'}
+Create the `tibble` containing the census data for the three cities.
+ 
+Select the data for the year 2001. Which city had the smallest population that year?
+:::
+
+::: {#answerN .callout-caution icon=false title='Answer' collapse="true"}
+
+Import the `tidyverse` and load up the data
+
+```{r}
+library(tidyverse)
+
+census <- tibble("City"=c("Paris", "Paris", "Paris", "Paris",
+                          "London", "London", "London", "London",
+                          "Rome", "Rome", "Rome", "Rome"),
+                 "year"=as.integer(c(2001, 2008, 2009, 2010,
+                                     2001, 2006, 2011, 2015,
+                                     2001, 2006, 2009, 2012)),
+                 "pop"=c(2.148, 2.211, 2.234, 2.244,
+                         7.322, 7.657, 8.174, 8.615,
+                         2.547, 2.627, 2.734, 2.627))
+```
+
+We start by grabbing the data for the year we care about
+
+```{r}
+census %>% filter(year==2001)
+```
+
+We can see that the smallest population was in Paris that year but 
+let's try to extract it using R.
+
+```{r}
+pop <- (census %>% filter(year==2001))$pop
+pop
+```
+
+The `min` function returns the minimum of a list of numbers. If we run
+this on `pop` then we will get the smallest number.
+
+```{r}
+min_pop <- min(pop)
+min_pop
+```
+We can now use this minimum population to further filter the census data;
+
+```{r}
+census %>% filter(year==2001) %>% filter(pop==min_pop)
+```
+
+Finally(!) we can extract the City column
+
+```{r}
+(census %>% filter(year==2001) %>% filter(pop==min_pop))["City"]
+```
+ 
+All of this could be combined into a single (dense) expression, e.g.
+
+```{r}
+city <- (census %>%
+           filter(year==2001) %>%
+           filter(pop==min((census %>% filter(year==2001))["pop"]))
+         )["City"]
+city
+```
+
+ :::

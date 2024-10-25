@@ -1,0 +1,49 @@
+project:
+  type: website
+
+website:
+  title: "Introduction to Data Analysis in R"
+  page-navigation: true
+
+  sidebar: 
+    title: "Data Analysis in R"
+    logo: "assets/UoB_RGB_24.png"
+    align: center
+    logo-alt: "University of Bristol logo"
+    style: "docked"
+    border: true
+    contents: 
+      - "index.qmd"
+      - "pages/010-workspace-setup.qmd"
+      - "pages/020-tibbles.qmd"
+      #- section: "pages/020-tibbles.qmd"
+      #  contents:
+      #    - "pages/021-install-packages.qmd"
+      #    - "pages/022-loading-packages.qmd"
+      - "pages/030-files.qmd"
+      - "pages/040-tidyverse.qmd"
+      - "pages/050-analysis.qmd"
+      - "pages/060-ggplot.qmd"
+      # - "pages/070-worksheet.qmd"
+      - "pages/980-summary.qmd"
+      - "pages/990-contributors.qmd"
+
+
+  page-footer:
+    left: "[Jean Golding Institute](https://www.bristol.ac.uk/golding/) © [CC-BY 4.0](http://creativecommons.org/licenses/by/4.0/)"  
+  repo-url: https://github.com/uob-training/intro-data-analysis-r
+#  repo-actions: [edit, issue]
+
+format:
+  html:
+    theme: [cosmo, styles.scss]
+    toc: true
+    shift-heading-level-by: 1
+    highlight-style: github
+
+    # code-line-numbers: true
+
+execute:
+  freeze: auto
+  error: true
+

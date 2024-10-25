@@ -1,0 +1,8 @@
+---
+title: Contributors
+---
+
+This course has been developed by the [Jean Golding Insitute](https://www.bristol.ac.uk/golding/).
+
+These materials were originally written by Christopher Woods [https://chryswoods.com/intermediate_r/](https://chryswoods.com/intermediate_r/), based on Introduction to Data Analysis in Python by Matt Williams [https://milliams.com/courses/data_analysis_python/](https://milliams.com/courses/data_analysis_python/). 
+

@@ -1,0 +1,203 @@
+---
+title: Tidy data
+---
+
+```{r}
+#| echo: false
+#| output: false
+library(tidyverse)
+
+temperature <- read_table(
+    "https://raw.githubusercontent.com/Bristol-Training/intro-data-analysis-r/refs/heads/main/data/cetml1659on.txt",
+    skip=6,
+    na=c("-99.99", "-99.9"),
+    col_types=cols("DATE"=col_integer())
+)
+```
+
+The `tidyverse` is founded on the philosophy of tidy data. This philosophy
+says that, if you format your data in a "tidy manner", then this 
+simplifies all later data manipulation and visualisation. The visualisation
+and data analysis functions in the `tidyverse` are thus built on the 
+assumption that the data they process is "tidy".
+
+So, what is "tidy data". This is detailed very clearly in 
+[R for Data Science (2e) by Hadley Wickham, Mine Çetinkaya-Rundel and Garrett Grolemund](https://r4ds.hadley.nz/tidy-data.html). In summary,
+"tidy data" follows three interrelated rules;
+
+1. Each variable has its own column
+2. Each observation has its own row
+3. Each value must have its own cell
+
+Let's look at how this applies to the [Met Office data set](https://raw.githubusercontent.com/Bristol-Training/intro-data-analysis-r/refs/heads/main/data/cetml1659on.txt) we saw in the last section.
+
+Each row in this data set corresponds to observations that are collected throughout the year;
+
+```
+DATE      JAN   FEB   MAR   APR   MAY   JUN   JUL   AUG   SEP   OCT   NOV   DEC     YEAR
+1659      3.0   4.0   6.0   7.0  11.0  13.0  16.0  16.0  13.0  10.0   5.0   2.0     8.87
+1660      0.0   4.0   6.0   9.0  11.0  14.0  15.0  16.0  13.0  10.0   6.0   5.0     9.10
+1661      5.0   5.0   6.0   8.0  11.0  14.0  15.0  15.0  13.0  11.0   8.0   6.0     9.78
+```
+
+So, is this data tidy? Let's look at the rules;
+
+1. No, the month name is a variable that specifies in which month the observation was taken. It should be in its own column and not used as a column header, 
+2. No, a row contains 12 observations across a year, plus an average of the rows
+3. No, the value of the month variable, e.g. for January 1659 is a column header and does not have its own cell. And the YEAR column is not a value that matches any variable, as it refers to an average of values that is a derived from the observations of the other cells.
+
+To tidy the data we need to perform a series of steps. These will use functions from the `tidyverse` [dplyr](https://dplyr.tidyverse.org) and
+[tidyr](https://tidyr.tidyverse.org) packages. These provide functions for tidying data, plus a grammar for data manipulation. Together, they will help you transform untidy data into tidy data.
+
+## `select`
+
+The [select](https://dplyr.tidyverse.org/reference/select.html) function makes it easier to select (or deselect) one or more columns (variables) from a tibble. The general format is:
+
+```{.r}
+data %>% select(column_name)           # selects a single column
+data %>% select(c(column1, column2))   # selects multiple column
+data %>% select(-column_name)          # selects all columns except a single column
+data %>% select(-c(column1, column2))  # selects except multiple columns
+```
+
+In our case, the `YEAR` column contains a derived value (the mean average) and
+should be removed as it is not a variable of an observation. We can do this using;
+
+```{r}
+temperature %>% select(-YEAR)
+```
+
+
+
+## Pivoting with `pivot_longer`
+
+Next, we need to pivot (rotate) the table so that the observation for each month is on its own row in the table. We do this using the [pivot_longer](https://tidyr.tidyverse.org/reference/pivot_longer.html) function. You need to pass to this function the names of the columns that contain observations. These columns will become rows, with the value going into a new column named according to `values_to`, and the old column name moving into a new column named according to `names_to`, e.g.
+
+```{.r}
+pivot_longer(c("JAN", "FEB", "MAR"), 
+             names_to="month",
+             values_to="temperature")
+```
+
+would move the values of the "JAN", "FEB" and "MAR" columns into a new
+column called "temperature", and the actual month names will be moved
+into a new column called "month".
+
+For our data set, we would use;
+
+```{r}
+temperature %>% 
+    select(-YEAR) %>%
+    pivot_longer(c("JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+                   "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"),
+                 names_to="month",
+                 values_to="temperature")
+```
+
+
+## Renaming columns
+
+Our data is now "tidy". Each variable (DATE, month, temperature) has its own column,
+each observation has its own row, and each value has its own cell.
+
+However, "DATE" is a poor choice of name for the "year" variable. We can rename
+a column using the [rename](https://dplyr.tidyverse.org/reference/rename.html) 
+function. The general format is;
+
+```{.r}
+rename(new_name=old_name)
+```
+
+and so, for our data we could use;
+
+```{r}
+temperature %>%
+    select(-YEAR) %>%
+    pivot_longer(c("JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+                   "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"),
+                 names_to="month",
+                 values_to="temperature") %>%
+    rename(year=DATE)
+```
+
+
+
+## Factors and mutate
+
+The final problem to solve is that the value of the variable "month" 
+for each observation is just a character string. As it is, R does not
+know that this is a categorical variable that can only take one of
+a number of valid values (e.g. in this case, only months of the year).
+ 
+If there were any typos (e.g. "JULY" instead of "JUL") then we would not
+see that error. Also, if we sorted by month then they would sort 
+alphabetically (APR before JAN), instead of in the correct month order.
+
+To solve this, we need to convert the month into a factor. A factor
+is used to represent categorical data. A factor must have a value
+that corresponds to one of its levels. For example, lets now
+create the levels for a factor to represent months of the year;
+
+```{r}
+month_levels <- c("JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+                  "JUL", "AUG", "SEP", "OCT", "NOV", "DEC")
+```
+
+This list of strings sets the valid values of the factor, and the 
+order in which they should be arranged.
+
+To factor data, we use the [factor](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/factor)
+function which is included in base R. The general syntax is;
+
+```{.r}
+factor(data, levels)
+```
+
+This would return the passed `data` factored into one of the levels specified
+in `levels`.
+
+In our case, we will need to perform
+
+```{.r}
+factor(data, month_levels)
+```
+
+one each of the values of the month variable for each observation.
+
+To do this, we need to edit our data to translate each month string into a
+month factor. Editing of a tibble is performed by the 
+[mutate](https://dplyr.tidyverse.org/reference/mutate.html)
+function, e.g.
+
+```{.r}
+mutate(temperature=temperature+5)
+```
+
+would edit the "temperature" column variable, and add "5" to every single value 
+in this column. In our case, we want to factor each value of the 
+month column variable, so we need 
+
+```{.r}
+mutate(month=factor(month, month_levels))
+```
+
+Putting this together with what we have before, and assigning the tibble
+to a new variable called `historical_temperature`, we now get;
+
+```{r}
+historical_temperature <- temperature %>%
+    select(-YEAR) %>%
+    pivot_longer(c("JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+                   "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"),
+                 names_to="month",
+                 values_to="temperature") %>%
+    rename(year=DATE) %>%
+    mutate(month=factor(month, month_levels))
+
+historical_temperature
+```
+
+
+
+As you can see, the data type for "month" is now "fct", which is short for "factor".
+

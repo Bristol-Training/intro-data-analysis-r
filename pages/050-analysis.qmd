@@ -1,0 +1,238 @@
+---
+title: Data analysis
+---
+
+
+# Data analysis
+
+Up to this point, we have just been learning how to read data and make it *tidy*. This was a lot of work. The pay-off is that now the analysis of the data will be much easier and straightforward.
+
+This is intentional. Data cleaning is the messiest and most ambiguous part of data science. A truism is that data cleaning takes 80% of the time of any data science project. However, without this effort, data analysis and visualisation would be similarly messy and time consuming. By cleaning first, we can perform data analysis and visualisation using clean, consistent, well-tested and tidy tools.
+
+## Analysis via `summarise`
+
+You can perform summary analysis on data in a tibble using the [summarise](https://dplyr.tidyverse.org/reference/summarise.html) function from the [dply](https://dplyr.tidyverse.org) package.
+
+`summarise` will create a new tibble that is a summary of the input tibble, based on grouping and a summarising function. Summarising functions include;
+
+* Center: [`mean()`](https://rdrr.io/r/base/mean.html), [`median()`](https://rdrr.io/r/stats/median.html)
+* Spread: [`sd()`](https://rdrr.io/r/stats/sd.html), [`IQR()`](https://rdrr.io/r/stats/IQR.html), [`mad()`](https://rdrr.io/r/stats/mad.html)
+* Range: [`min()`](https://rdrr.io/r/base/Extremes.html), [`max()`](https://rdrr.io/r/base/Extremes.html), [`quantile()`](https://rdrr.io/r/stats/quantile.html)
+* Position: [`first()`](https://dplyr.tidyverse.org/reference/nth.html), [`last()`](https://dplyr.tidyverse.org/reference/nth.html), [`nth()`](https://dplyr.tidyverse.org/reference/nth.html)
+* Count: [`n()`](https://dplyr.tidyverse.org/reference/context.html), [`n_distinct()`](https://dplyr.tidyverse.org/reference/n_distinct.html)
+* Logical: [`any()`](https://rdrr.io/r/base/any.html), [`all()`](https://rdrr.io/r/base/all.html)
+
+For example, we can calculate the mean average temperature using:
+
+```{r}
+#| echo: false
+#| output: false
+library(tidyverse)
+
+month_levels <- c("JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+                  "JUL", "AUG", "SEP", "OCT", "NOV", "DEC")
+
+temperature <- read_table(
+    "https://raw.githubusercontent.com/Bristol-Training/intro-data-analysis-r/refs/heads/main/data/cetml1659on.txt",
+    skip=6,
+    na=c("-99.99", "-99.9"),
+    col_types=cols("DATE"=col_integer())
+)
+
+historical_temperature <- temperature %>%
+    select(-YEAR) %>%
+    pivot_longer(c("JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+                   "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"),
+                 names_to="month",
+                 values_to="temperature") %>%
+    rename(year=DATE) %>%
+    mutate(month=factor(month, month_levels))
+```
+```{r}
+historical_temperature %>% 
+    summarise("average temperature"=mean(temperature, na.rm=TRUE))
+```
+
+
+Note that we used `na.rm=TRUE` to tell the function to ignore `NA` values.
+
+This has created a new tibble, where the column called "average temperature"
+contains the mean average temperature.
+
+## Grouping data
+
+Each row of tidy data corresponds to a single observation. 
+We can group observations together into groups using
+[group_by](https://dplyr.tidyverse.org/reference/group_by.html).
+We can then feed these groups into summaries.
+
+For example, we can group by year and summarise by the mean
+function to calculate the average temperature for each year;
+
+```{r}
+historical_temperature %>% 
+    group_by(year) %>%
+    summarise("average temperature"=mean(temperature, na.rm=TRUE))
+```
+
+
+or, we could calculate the average temperature for each month via;
+
+```{r}
+historical_temperature %>%
+    group_by(month) %>%
+    summarise("average temperature"=mean(temperature, na.rm=TRUE))
+```
+
+
+## Filtering data
+
+We can then use the [filter](https://dplyr.tidyverse.org/reference/filter.html),
+also from dplyr, to filter observations (rows) before we group. For example,
+we could filter the years in the 18th Century (`year<1800 & year>=1700`)
+and calculate the average monthly temperatures then via;
+
+```{r}
+historical_temperature %>%
+    filter(year<1800 & year>=1700) %>%
+    group_by(month) %>%
+    summarise("18th Century"=mean(temperature, na.rm=TRUE))
+```
+
+
+We could then repeat this for the 21st Century...
+
+```{r}
+historical_temperature %>%
+    filter(year>=2000) %>%
+    group_by(month) %>%
+    summarise("21st Century"=mean(temperature, na.rm=TRUE))
+```
+
+
+
+
+
+::: {#exerciseN .callout-note icon=false title='Exercise'}
+Use `filter`, `group_by` and `summarise` to create tibbles that contain the average monthly temperatures for the 17th and 21st Centuries. Take the difference of these to calculate the change in average temperature for each month.
+
+Next calculate the minimum and maximum monthly temperatures for the 17th and 21st Centuries. Again, calculate the change in minimum and maximum temperatures for each month.
+
+Finally, what is the average increase in maximum monthly temperatures between the 16th and 21st Centuries?
+:::
+
+
+::: {#answerN .callout-caution icon=false title='Answer' collapse="true"}
+
+```{r}
+library(tidyverse)
+```
+
+Load the data...
+
+```{r}
+temperature <- read_table(
+    "https://raw.githubusercontent.com/Bristol-Training/intro-data-analysis-r/refs/heads/main/data/cetml1659on.txt",
+    skip=6,
+    na=c("-99.99", "-99.9"),
+    col_types=cols("DATE"=col_integer())
+)
+```
+
+Create the month levels
+
+```{r}
+month_levels <- c("JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+                  "JUL", "AUG", "SEP", "OCT", "NOV", "DEC")
+```
+
+Tidy the data...
+
+```{r}
+historical_temperature <- temperature %>%
+    select(-YEAR) %>%
+    pivot_longer(c("JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+                   "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"),
+                 names_to="month",
+                 values_to="temperature") %>%
+    rename(year=DATE) %>%
+    mutate(month=factor(month, month_levels))
+```
+
+Calculate the mean monthly temperatures in the 17th Century
+
+```{r}
+c17th <- historical_temperature %>%
+     filter(year<1700 & year>=1600) %>%
+     group_by(month) %>%
+     summarise("temperature"=mean(temperature, na.rm=TRUE), .groups="drop")
+```
+
+(the `.groups="drop"` removes a warning message in newer versions of R. It is
+experimental, e.g. see [this stackoverflow post](https://stackoverflow.com/questions/62140483/how-to-interpret-dplyr-message-summarise-regrouping-output-by-x-override))
+
+Calculate the mean monthly temperatures in the 21st Century
+
+```{r}
+c21st <- historical_temperature %>%
+     filter(year>=2000) %>%
+     group_by(month) %>%
+     summarise("temperature"=mean(temperature, na.rm=TRUE), .groups="drop")
+```
+
+Now add the difference to the c21st table and print it out
+
+```{r}
+c21st["change"] <- c21st["temperature"] - c17th["temperature"]
+c21st
+```
+
+From this we can see that most of the warming is focused on the winter
+months.
+
+We will now repeat this for the maximum and minimum temperatures...
+
+```{r}
+c17th_max <- historical_temperature %>%
+     filter(year<1700 & year>=1600) %>%
+     group_by(month) %>%
+     summarise("temperature"=max(temperature, na.rm=TRUE), .groups="drop")
+c21st_max <- historical_temperature %>%
+     filter(year>=2000) %>%
+     group_by(month) %>%
+     summarise("temperature"=max(temperature, na.rm=TRUE), .groups="drop")
+c21st_max["change"] <- c21st_max["temperature"] - c17th_max["temperature"]
+
+c21st_max
+```
+
+```{r}
+c17th_min <- historical_temperature %>%
+     filter(year<1700 & year>=1600) %>%
+     group_by(month) %>%
+     summarise("temperature"=min(temperature, na.rm=TRUE), .groups="drop")
+c21st_min <- historical_temperature %>%
+     filter(year>=2000) %>%
+     group_by(month) %>%
+     summarise("temperature"=min(temperature, na.rm=TRUE), .groups="drop")
+c21st_min["change"] <- c21st_min["temperature"] - c17th_min["temperature"]
+
+c21st_min
+```
+
+Finally, we can get the average increase in monthly temperatures by calculating
+the mean of the `change` column in `c21st`
+
+```{r}
+mean(c21st[["change"]])
+```
+:::
+
+
+Because we were working with tidy data the filtering and grouping
+of observations, and then generation of summary statistics was 
+straightforward. This grammar (data is filtered, then grouped,
+then summarised) worked because the data was tidy. As we will
+see in the next section, a similar grammar for visualisation
+makes graph drawing equally logical.
+

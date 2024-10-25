@@ -1,0 +1,12 @@
+---
+title: Summary
+---
+
+
+That's all we have for this workshop. By now you should have a better understanding of how you can make your code more easily shared, reusable and *tidy*. In this workshow we have covered:
+
+- Search for and install R packages
+- Using R packages and their functions
+- Writing your own functions
+- Error handling in functions
+- Write *tidy* code to work with *tidy* data with `tidyverse`
