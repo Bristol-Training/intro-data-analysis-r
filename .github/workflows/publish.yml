@@ -1,0 +1,47 @@
+name: Render and Publish Quarto site
+
+on:
+  push:
+    branches: [main]   # adjust to your publishing branch
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+        contents: write
+        pages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+
+      - name: Set up Pandoc
+        uses: r-lib/actions/setup-pandoc@v2
+
+      - name: Restore R package cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/renv
+          key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
+          restore-keys: ${{ runner.os }}-renv-
+
+      - name: Install renv
+        run: Rscript -e 'install.packages("renv")'
+
+      - name: Restore packages with renv
+        run: Rscript -e 'renv::restore()'
+
+      - name: Install Quarto CLI
+        uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Render site
+        run: quarto render
+
+      - name: Deploy to pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+              publish_dir: ./_site
+              publish_branch: pages
+              github_token: ${{ secrets.GITHUB_TOKEN }}
