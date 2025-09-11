@@ -5,13 +5,14 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.0.0
 Imports: 
+    quarto
+    knitr
+    rmarkdown
     tibble
     ggplot2
     readr
     lubridate
     tidyr
     dplyr
-    quarto
     stringr
-    rmarkdown
     
