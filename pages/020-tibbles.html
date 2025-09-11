@@ -236,7 +236,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>As you may remember from the <a href="https://bristol-training.github.io/intermediate-r/">Intermediate R workshop</a>, R is great at representing and manipulating tabular data. In “traditional” R, this was handled in <code>data.frame</code>, while in modern “tidyverse” R this is handled via a <code>tibble</code>.</p>
+<p>As you may remember from the <a href="https://bristol-training.github.io/intro-r-2/">Introduction to R (Part 2)</a>, R is great at representing and manipulating tabular data. In “traditional” R, this was handled in <code>data.frame</code>, while in modern “tidyverse” R this is handled via a <code>tibble</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -500,7 +500,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 4 Paris  2010  2.24</code></pre>
 </div>
 </div>
-<p>(note that we didn’t need to put double quotes around <code>City</code> in the filter - it knows that this is a column name. Also, <a href="https://bristol-training.github.io/intermediate-r/pages/042-tidyverse-pipe.html">look here</a> if you need to refresh your knowledge of the <code>%&gt;%</code> operator).</p>
+<p>(note that we didn’t need to put double quotes around <code>City</code> in the filter - it knows that this is a column name. Also, <a href="https://bristol-training.github.io/intro-r-2/pages/042-tidyverse-pipe.html">look here</a> if you need to refresh your knowledge of the <code>%&gt;%</code> operator).</p>
 <p>This has returned a new <code>tibble</code>, which you can then access using the same methods as above, e.g.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>(census <span class="sc">%&gt;%</span> <span class="fu">filter</span>(City<span class="sc">==</span><span class="st">"Paris"</span>))[<span class="st">"year"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
