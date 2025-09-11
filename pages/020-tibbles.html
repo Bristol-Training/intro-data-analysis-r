@@ -239,8 +239,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>As you may remember from the <a href="https://bristol-training.github.io/intermediate-r/">Intermediate R workshop</a>, R is great at representing and manipulating tabular data. In “traditional” R, this was handled in <code>data.frame</code>, while in modern “tidyverse” R this is handled via a <code>tibble</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in library(tidyverse): there is no package called 'tidyverse'</code></pre>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.2
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.1.0     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
 </div>
 <p>A <code>tibble</code> is a two (or possibly more) dimensional table of data.</p>
@@ -254,127 +263,225 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"pop"</span><span class="ot">=</span><span class="fu">c</span>(<span class="fl">2.148</span>, <span class="fl">2.211</span>, <span class="fl">2.234</span>, <span class="fl">2.244</span>,</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>                         <span class="fl">7.322</span>, <span class="fl">7.657</span>, <span class="fl">8.174</span>, <span class="fl">8.615</span>,</span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                         <span class="fl">2.547</span>, <span class="fl">2.627</span>, <span class="fl">2.734</span>, <span class="fl">2.627</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in tibble(City = c("Paris", "Paris", "Paris", "Paris", "London", : could not find function "tibble"</code></pre>
-</div>
 </div>
 <p>This has created a <code>tibble</code> that we have assigned to the variable <code>census</code>. The column names are the keys (<code>City</code>, <code>year</code> and <code>pop</code>), while the data for each column is given in the values (the lists).</p>
 <p>You can print a summary of the tibble via:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>census</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'census' not found</code></pre>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>census</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 3
+   City    year   pop
+   &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;
+ 1 Paris   2001  2.15
+ 2 Paris   2008  2.21
+ 3 Paris   2009  2.23
+ 4 Paris   2010  2.24
+ 5 London  2001  7.32
+ 6 London  2006  7.66
+ 7 London  2011  8.17
+ 8 London  2015  8.62
+ 9 Rome    2001  2.55
+10 Rome    2006  2.63
+11 Rome    2009  2.73
+12 Rome    2012  2.63</code></pre>
 </div>
 </div>
 <p>Note that R will default to interpreting numbers as floating point (<code>dbl</code>). While this is correct for the <code>pop</code> (population) column, this is the wrong choice for the year. A better choice would be an integer. To force this, use <code>as.integer</code> to set the data type for the year column;</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>census <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="st">"City"</span><span class="ot">=</span><span class="fu">c</span>(<span class="st">"Paris"</span>, <span class="st">"Paris"</span>, <span class="st">"Paris"</span>, <span class="st">"Paris"</span>,</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                          <span class="st">"London"</span>, <span class="st">"London"</span>, <span class="st">"London"</span>, <span class="st">"London"</span>,</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                          <span class="st">"Rome"</span>, <span class="st">"Rome"</span>, <span class="st">"Rome"</span>, <span class="st">"Rome"</span>),</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"year"</span><span class="ot">=</span><span class="fu">as.integer</span>(<span class="fu">c</span>(<span class="dv">2001</span>, <span class="dv">2008</span>, <span class="dv">2009</span>, <span class="dv">2010</span>,</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                                     <span class="dv">2001</span>, <span class="dv">2006</span>, <span class="dv">2011</span>, <span class="dv">2015</span>,</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                                     <span class="dv">2001</span>, <span class="dv">2006</span>, <span class="dv">2009</span>, <span class="dv">2012</span>)),</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"pop"</span><span class="ot">=</span><span class="fu">c</span>(<span class="fl">2.148</span>, <span class="fl">2.211</span>, <span class="fl">2.234</span>, <span class="fl">2.244</span>,</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                         <span class="fl">7.322</span>, <span class="fl">7.657</span>, <span class="fl">8.174</span>, <span class="fl">8.615</span>,</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>                         <span class="fl">2.547</span>, <span class="fl">2.627</span>, <span class="fl">2.734</span>, <span class="fl">2.627</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in tibble(City = c("Paris", "Paris", "Paris", "Paris", "London", : could not find function "tibble"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>census</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'census' not found</code></pre>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>census <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="st">"City"</span><span class="ot">=</span><span class="fu">c</span>(<span class="st">"Paris"</span>, <span class="st">"Paris"</span>, <span class="st">"Paris"</span>, <span class="st">"Paris"</span>,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                          <span class="st">"London"</span>, <span class="st">"London"</span>, <span class="st">"London"</span>, <span class="st">"London"</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                          <span class="st">"Rome"</span>, <span class="st">"Rome"</span>, <span class="st">"Rome"</span>, <span class="st">"Rome"</span>),</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"year"</span><span class="ot">=</span><span class="fu">as.integer</span>(<span class="fu">c</span>(<span class="dv">2001</span>, <span class="dv">2008</span>, <span class="dv">2009</span>, <span class="dv">2010</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                                     <span class="dv">2001</span>, <span class="dv">2006</span>, <span class="dv">2011</span>, <span class="dv">2015</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                                     <span class="dv">2001</span>, <span class="dv">2006</span>, <span class="dv">2009</span>, <span class="dv">2012</span>)),</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"pop"</span><span class="ot">=</span><span class="fu">c</span>(<span class="fl">2.148</span>, <span class="fl">2.211</span>, <span class="fl">2.234</span>, <span class="fl">2.244</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                         <span class="fl">7.322</span>, <span class="fl">7.657</span>, <span class="fl">8.174</span>, <span class="fl">8.615</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>                         <span class="fl">2.547</span>, <span class="fl">2.627</span>, <span class="fl">2.734</span>, <span class="fl">2.627</span>))</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>census</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 3
+   City    year   pop
+   &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt;
+ 1 Paris   2001  2.15
+ 2 Paris   2008  2.21
+ 3 Paris   2009  2.23
+ 4 Paris   2010  2.24
+ 5 London  2001  7.32
+ 6 London  2006  7.66
+ 7 London  2011  8.17
+ 8 London  2015  8.62
+ 9 Rome    2001  2.55
+10 Rome    2006  2.63
+11 Rome    2009  2.73
+12 Rome    2012  2.63</code></pre>
 </div>
 </div>
 <p>will print</p>
 <p>You access the contents of a <code>tibble</code> mostly by column, e.g.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>census[<span class="st">"City"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'census' not found</code></pre>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>census[<span class="st">"City"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 1
+   City  
+   &lt;chr&gt; 
+ 1 Paris 
+ 2 Paris 
+ 3 Paris 
+ 4 Paris 
+ 5 London
+ 6 London
+ 7 London
+ 8 London
+ 9 Rome  
+10 Rome  
+11 Rome  
+12 Rome  </code></pre>
 </div>
 </div>
 <p>will return a <code>tibble</code> of just a single column containing the <code>City</code> data.</p>
 <p>You can also access the columns by their index, e.g.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>census[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'census' not found</code></pre>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>census[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 1
+   City  
+   &lt;chr&gt; 
+ 1 Paris 
+ 2 Paris 
+ 3 Paris 
+ 4 Paris 
+ 5 London
+ 6 London
+ 7 London
+ 8 London
+ 9 Rome  
+10 Rome  
+11 Rome  
+12 Rome  </code></pre>
 </div>
 </div>
 <p>will return the first column, so is identical to <code>census["City"]</code>.</p>
 <p>You can also extract multiple columns by specifying them via <code>c( )</code>, e.g.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>census[<span class="fu">c</span>(<span class="st">"City"</span>, <span class="st">"year"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'census' not found</code></pre>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>census[<span class="fu">c</span>(<span class="st">"City"</span>, <span class="st">"year"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 2
+   City    year
+   &lt;chr&gt;  &lt;int&gt;
+ 1 Paris   2001
+ 2 Paris   2008
+ 3 Paris   2009
+ 4 Paris   2010
+ 5 London  2001
+ 6 London  2006
+ 7 London  2011
+ 8 London  2015
+ 9 Rome    2001
+10 Rome    2006
+11 Rome    2009
+12 Rome    2012</code></pre>
 </div>
 </div>
 <p>will return a <code>tibble</code> with the <code>City</code> and <code>year</code> columns.</p>
 <p>To access data by rows, you need to pass in the row index followed by a comma, e.g.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>census[<span class="dv">1</span>, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'census' not found</code></pre>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>census[<span class="dv">1</span>, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  City   year   pop
+  &lt;chr&gt; &lt;int&gt; &lt;dbl&gt;
+1 Paris  2001  2.15</code></pre>
 </div>
 </div>
 <p>will return a <code>tibble</code> containing just the first row of data.</p>
 <p>You can use ranges to get several rows, e.g.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>census[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'census' not found</code></pre>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>census[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 3
+  City    year   pop
+  &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt;
+1 Paris   2001  2.15
+2 Paris   2008  2.21
+3 Paris   2009  2.23
+4 Paris   2010  2.24
+5 London  2001  7.32</code></pre>
 </div>
 </div>
 <p>would return the first five rows, while</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>census[<span class="fu">seq</span>(<span class="dv">2</span>, <span class="dv">10</span>, <span class="dv">2</span>), ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'census' not found</code></pre>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>census[<span class="fu">seq</span>(<span class="dv">2</span>, <span class="dv">10</span>, <span class="dv">2</span>), ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 3
+  City    year   pop
+  &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt;
+1 Paris   2008  2.21
+2 Paris   2010  2.24
+3 London  2006  7.66
+4 London  2015  8.62
+5 Rome    2006  2.63</code></pre>
 </div>
 </div>
 <p>would return the even rows from 2 to 10.</p>
 <p>You can access specific rows and columns via <code>[row, column]</code>, e.g.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>census[<span class="dv">1</span>, <span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'census' not found</code></pre>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>census[<span class="dv">1</span>, <span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  City 
+  &lt;chr&gt;
+1 Paris</code></pre>
 </div>
 </div>
 <p>returns a <code>tibble</code> containing just the first row and first column, while</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>census[<span class="fu">seq</span>(<span class="dv">2</span>, <span class="dv">10</span>, <span class="dv">2</span>), <span class="st">"year"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'census' not found</code></pre>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>census[<span class="fu">seq</span>(<span class="dv">2</span>, <span class="dv">10</span>, <span class="dv">2</span>), <span class="st">"year"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 1
+   year
+  &lt;int&gt;
+1  2008
+2  2010
+3  2006
+4  2015
+5  2006</code></pre>
 </div>
 </div>
 <p>would return the <code>year</code> column of the even rows from 2 to 10, and</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>census[<span class="dv">5</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'census' not found</code></pre>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>census[<span class="dv">5</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 2
+   year   pop
+  &lt;int&gt; &lt;dbl&gt;
+1  2001  7.32</code></pre>
 </div>
 </div>
 <p>would return the second and third columns of the fifth row.</p>
 <p>The above functions all return a <code>tibble</code> that is a subset of the whole <code>tibble</code>. You can extract the data for a single column as a list via <code>[[ ]]</code> or <code>$</code>, e.g.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>census[[<span class="dv">1</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'census' not found</code></pre>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>census[[<span class="dv">1</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Paris"  "Paris"  "Paris"  "Paris"  "London" "London" "London" "London"
+ [9] "Rome"   "Rome"   "Rome"   "Rome"  </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>census[[<span class="st">"City"</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'census' not found</code></pre>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>census[[<span class="st">"City"</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Paris"  "Paris"  "Paris"  "Paris"  "London" "London" "London" "London"
+ [9] "Rome"   "Rome"   "Rome"   "Rome"  </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>census<span class="sc">$</span>City</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'census' not found</code></pre>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>census<span class="sc">$</span>City</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Paris"  "Paris"  "Paris"  "Paris"  "London" "London" "London" "London"
+ [9] "Rome"   "Rome"   "Rome"   "Rome"  </code></pre>
 </div>
 </div>
 <p>and can then extract data from those lists via sub-indexing, e.g.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>census<span class="sc">$</span>City[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'census' not found</code></pre>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>census<span class="sc">$</span>City[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Paris"</code></pre>
 </div>
 </div>
 <p>would return the <code>City</code> column data for the first row.</p>
@@ -382,24 +489,48 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="querying">Querying</h3>
 <p>We can start to ask questions of our data using the <code>filter</code> function.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>census <span class="sc">%&gt;%</span> <span class="fu">filter</span>(City<span class="sc">==</span><span class="st">"Paris"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in census %&gt;% filter(City == "Paris"): could not find function "%&gt;%"</code></pre>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>census <span class="sc">%&gt;%</span> <span class="fu">filter</span>(City<span class="sc">==</span><span class="st">"Paris"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+  City   year   pop
+  &lt;chr&gt; &lt;int&gt; &lt;dbl&gt;
+1 Paris  2001  2.15
+2 Paris  2008  2.21
+3 Paris  2009  2.23
+4 Paris  2010  2.24</code></pre>
 </div>
 </div>
 <p>(note that we didn’t need to put double quotes around <code>City</code> in the filter - it knows that this is a column name. Also, <a href="https://bristol-training.github.io/intermediate-r/pages/042-tidyverse-pipe.html">look here</a> if you need to refresh your knowledge of the <code>%&gt;%</code> operator).</p>
 <p>This has returned a new <code>tibble</code>, which you can then access using the same methods as above, e.g.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>(census <span class="sc">%&gt;%</span> <span class="fu">filter</span>(City<span class="sc">==</span><span class="st">"Paris"</span>))[<span class="st">"year"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in census %&gt;% filter(City == "Paris"): could not find function "%&gt;%"</code></pre>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>(census <span class="sc">%&gt;%</span> <span class="fu">filter</span>(City<span class="sc">==</span><span class="st">"Paris"</span>))[<span class="st">"year"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 1
+   year
+  &lt;int&gt;
+1  2001
+2  2008
+3  2009
+4  2010</code></pre>
 </div>
 </div>
 <p>You can also test if the rows of a <code>tibble</code> match a condition, e.g.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>census[<span class="st">"City"</span>] <span class="sc">==</span> <span class="st">"Paris"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'census' not found</code></pre>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>census[<span class="st">"City"</span>] <span class="sc">==</span> <span class="st">"Paris"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       City
+ [1,]  TRUE
+ [2,]  TRUE
+ [3,]  TRUE
+ [4,]  TRUE
+ [5,] FALSE
+ [6,] FALSE
+ [7,] FALSE
+ [8,] FALSE
+ [9,] FALSE
+[10,] FALSE
+[11,] FALSE
+[12,] FALSE</code></pre>
 </div>
 </div>
 <p>returns a set of <code>TRUE</code> / <code>FALSE</code> values for each row, depending on whether the <code>City</code> value of that row was equal to <code>Paris</code>.</p>
@@ -408,13 +539,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="adding-new-columns">Adding new columns</h3>
 <p>New columns can be added to a <code>tibble</code> simply by assigning them by index (as you would for a dictionary);</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>census[<span class="st">"continental"</span>] <span class="ot">&lt;-</span> census[<span class="st">"City"</span>] <span class="sc">!=</span> <span class="st">"London"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'census' not found</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>census</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'census' not found</code></pre>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>census[<span class="st">"continental"</span>] <span class="ot">&lt;-</span> census[<span class="st">"City"</span>] <span class="sc">!=</span> <span class="st">"London"</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>census</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 4
+   City    year   pop continental
+   &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt; &lt;lgl&gt;      
+ 1 Paris   2001  2.15 TRUE       
+ 2 Paris   2008  2.21 TRUE       
+ 3 Paris   2009  2.23 TRUE       
+ 4 Paris   2010  2.24 TRUE       
+ 5 London  2001  7.32 FALSE      
+ 6 London  2006  7.66 FALSE      
+ 7 London  2011  8.17 FALSE      
+ 8 London  2015  8.62 FALSE      
+ 9 Rome    2001  2.55 TRUE       
+10 Rome    2006  2.63 TRUE       
+11 Rome    2009  2.73 TRUE       
+12 Rome    2012  2.63 TRUE       </code></pre>
 </div>
 </div>
 <div id="exerciseN" class="callout callout-style-default callout-note no-icon callout-titled" title="Exercise">
@@ -445,78 +587,78 @@ Answer
 <div class="callout-body-container callout-body">
 <p>Import the <code>tidyverse</code> and load up the data</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in library(tidyverse): there is no package called 'tidyverse'</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>census <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="st">"City"</span><span class="ot">=</span><span class="fu">c</span>(<span class="st">"Paris"</span>, <span class="st">"Paris"</span>, <span class="st">"Paris"</span>, <span class="st">"Paris"</span>,</span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>                          <span class="st">"London"</span>, <span class="st">"London"</span>, <span class="st">"London"</span>, <span class="st">"London"</span>,</span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>                          <span class="st">"Rome"</span>, <span class="st">"Rome"</span>, <span class="st">"Rome"</span>, <span class="st">"Rome"</span>),</span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"year"</span><span class="ot">=</span><span class="fu">as.integer</span>(<span class="fu">c</span>(<span class="dv">2001</span>, <span class="dv">2008</span>, <span class="dv">2009</span>, <span class="dv">2010</span>,</span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>                                     <span class="dv">2001</span>, <span class="dv">2006</span>, <span class="dv">2011</span>, <span class="dv">2015</span>,</span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>                                     <span class="dv">2001</span>, <span class="dv">2006</span>, <span class="dv">2009</span>, <span class="dv">2012</span>)),</span>
-<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"pop"</span><span class="ot">=</span><span class="fu">c</span>(<span class="fl">2.148</span>, <span class="fl">2.211</span>, <span class="fl">2.234</span>, <span class="fl">2.244</span>,</span>
-<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>                         <span class="fl">7.322</span>, <span class="fl">7.657</span>, <span class="fl">8.174</span>, <span class="fl">8.615</span>,</span>
-<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>                         <span class="fl">2.547</span>, <span class="fl">2.627</span>, <span class="fl">2.734</span>, <span class="fl">2.627</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in tibble(City = c("Paris", "Paris", "Paris", "Paris", "London", : could not find function "tibble"</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>census <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="st">"City"</span><span class="ot">=</span><span class="fu">c</span>(<span class="st">"Paris"</span>, <span class="st">"Paris"</span>, <span class="st">"Paris"</span>, <span class="st">"Paris"</span>,</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>                          <span class="st">"London"</span>, <span class="st">"London"</span>, <span class="st">"London"</span>, <span class="st">"London"</span>,</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>                          <span class="st">"Rome"</span>, <span class="st">"Rome"</span>, <span class="st">"Rome"</span>, <span class="st">"Rome"</span>),</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"year"</span><span class="ot">=</span><span class="fu">as.integer</span>(<span class="fu">c</span>(<span class="dv">2001</span>, <span class="dv">2008</span>, <span class="dv">2009</span>, <span class="dv">2010</span>,</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>                                     <span class="dv">2001</span>, <span class="dv">2006</span>, <span class="dv">2011</span>, <span class="dv">2015</span>,</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>                                     <span class="dv">2001</span>, <span class="dv">2006</span>, <span class="dv">2009</span>, <span class="dv">2012</span>)),</span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"pop"</span><span class="ot">=</span><span class="fu">c</span>(<span class="fl">2.148</span>, <span class="fl">2.211</span>, <span class="fl">2.234</span>, <span class="fl">2.244</span>,</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>                         <span class="fl">7.322</span>, <span class="fl">7.657</span>, <span class="fl">8.174</span>, <span class="fl">8.615</span>,</span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>                         <span class="fl">2.547</span>, <span class="fl">2.627</span>, <span class="fl">2.734</span>, <span class="fl">2.627</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We start by grabbing the data for the year we care about</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>census <span class="sc">%&gt;%</span> <span class="fu">filter</span>(year<span class="sc">==</span><span class="dv">2001</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in census %&gt;% filter(year == 2001): could not find function "%&gt;%"</code></pre>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>census <span class="sc">%&gt;%</span> <span class="fu">filter</span>(year<span class="sc">==</span><span class="dv">2001</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  City    year   pop
+  &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt;
+1 Paris   2001  2.15
+2 London  2001  7.32
+3 Rome    2001  2.55</code></pre>
 </div>
 </div>
 <p>We can see that the smallest population was in Paris that year but let’s try to extract it using R.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>pop <span class="ot">&lt;-</span> (census <span class="sc">%&gt;%</span> <span class="fu">filter</span>(year<span class="sc">==</span><span class="dv">2001</span>))<span class="sc">$</span>pop</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in census %&gt;% filter(year == 2001): could not find function "%&gt;%"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>pop</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'pop' not found</code></pre>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>pop <span class="ot">&lt;-</span> (census <span class="sc">%&gt;%</span> <span class="fu">filter</span>(year<span class="sc">==</span><span class="dv">2001</span>))<span class="sc">$</span>pop</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>pop</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.148 7.322 2.547</code></pre>
 </div>
 </div>
 <p>The <code>min</code> function returns the minimum of a list of numbers. If we run this on <code>pop</code> then we will get the smallest number.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>min_pop <span class="ot">&lt;-</span> <span class="fu">min</span>(pop)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'pop' not found</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>min_pop</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'min_pop' not found</code></pre>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>min_pop <span class="ot">&lt;-</span> <span class="fu">min</span>(pop)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>min_pop</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.148</code></pre>
 </div>
 </div>
 <p>We can now use this minimum population to further filter the census data;</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>census <span class="sc">%&gt;%</span> <span class="fu">filter</span>(year<span class="sc">==</span><span class="dv">2001</span>) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(pop<span class="sc">==</span>min_pop)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in census %&gt;% filter(year == 2001) %&gt;% filter(pop == min_pop): could not find function "%&gt;%"</code></pre>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>census <span class="sc">%&gt;%</span> <span class="fu">filter</span>(year<span class="sc">==</span><span class="dv">2001</span>) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(pop<span class="sc">==</span>min_pop)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  City   year   pop
+  &lt;chr&gt; &lt;int&gt; &lt;dbl&gt;
+1 Paris  2001  2.15</code></pre>
 </div>
 </div>
 <p>Finally(!) we can extract the City column</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>(census <span class="sc">%&gt;%</span> <span class="fu">filter</span>(year<span class="sc">==</span><span class="dv">2001</span>) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(pop<span class="sc">==</span>min_pop))[<span class="st">"City"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in census %&gt;% filter(year == 2001) %&gt;% filter(pop == min_pop): could not find function "%&gt;%"</code></pre>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>(census <span class="sc">%&gt;%</span> <span class="fu">filter</span>(year<span class="sc">==</span><span class="dv">2001</span>) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(pop<span class="sc">==</span>min_pop))[<span class="st">"City"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  City 
+  &lt;chr&gt;
+1 Paris</code></pre>
 </div>
 </div>
 <p>All of this could be combined into a single (dense) expression, e.g.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>city <span class="ot">&lt;-</span> (census <span class="sc">%&gt;%</span></span>
-<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>           <span class="fu">filter</span>(year<span class="sc">==</span><span class="dv">2001</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>           <span class="fu">filter</span>(pop<span class="sc">==</span><span class="fu">min</span>((census <span class="sc">%&gt;%</span> <span class="fu">filter</span>(year<span class="sc">==</span><span class="dv">2001</span>))[<span class="st">"pop"</span>]))</span>
-<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>         )[<span class="st">"City"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in census %&gt;% filter(year == 2001) %&gt;% filter(pop == min((census %&gt;% : could not find function "%&gt;%"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>city</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'city' not found</code></pre>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>city <span class="ot">&lt;-</span> (census <span class="sc">%&gt;%</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>           <span class="fu">filter</span>(year<span class="sc">==</span><span class="dv">2001</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>           <span class="fu">filter</span>(pop<span class="sc">==</span><span class="fu">min</span>((census <span class="sc">%&gt;%</span> <span class="fu">filter</span>(year<span class="sc">==</span><span class="dv">2001</span>))[<span class="st">"pop"</span>]))</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>         )[<span class="st">"City"</span>]</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>city</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  City 
+  &lt;chr&gt;
+1 Paris</code></pre>
 </div>
 </div>
 <p>:::</p>

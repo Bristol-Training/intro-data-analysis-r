@@ -258,21 +258,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>For example, we can calculate the mean average temperature using:</p>
 <div class="cell">
-<div class="cell-output cell-output-error">
-<pre><code>Error in library(tidyverse): there is no package called 'tidyverse'</code></pre>
-</div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in read_table("https://raw.githubusercontent.com/Bristol-Training/intro-data-analysis-r/refs/heads/main/data/cetml1659on.txt", : could not find function "read_table"</code></pre>
-</div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in temperature %&gt;% select(-YEAR) %&gt;% pivot_longer(c("JAN", "FEB", : could not find function "%&gt;%"</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>historical_temperature <span class="sc">%&gt;%</span> </span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="st">"average temperature"</span><span class="ot">=</span><span class="fu">mean</span>(temperature, <span class="at">na.rm=</span><span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in historical_temperature %&gt;% summarise(`average temperature` = mean(temperature, : could not find function "%&gt;%"</code></pre>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>historical_temperature <span class="sc">%&gt;%</span> </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="st">"average temperature"</span><span class="ot">=</span><span class="fu">mean</span>(temperature, <span class="at">na.rm=</span><span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  `average temperature`
+                  &lt;dbl&gt;
+1                  9.25</code></pre>
 </div>
 </div>
 <p>Note that we used <code>na.rm=TRUE</code> to tell the function to ignore <code>NA</code> values.</p>
@@ -283,20 +275,47 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Each row of tidy data corresponds to a single observation. We can group observations together into groups using <a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a>. We can then feed these groups into summaries.</p>
 <p>For example, we can group by year and summarise by the mean function to calculate the average temperature for each year;</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>historical_temperature <span class="sc">%&gt;%</span> </span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="st">"average temperature"</span><span class="ot">=</span><span class="fu">mean</span>(temperature, <span class="at">na.rm=</span><span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in historical_temperature %&gt;% group_by(year) %&gt;% summarise(`average temperature` = mean(temperature, : could not find function "%&gt;%"</code></pre>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>historical_temperature <span class="sc">%&gt;%</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="st">"average temperature"</span><span class="ot">=</span><span class="fu">mean</span>(temperature, <span class="at">na.rm=</span><span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 362 × 2
+    year `average temperature`
+   &lt;int&gt;                 &lt;dbl&gt;
+ 1  1659                  8.83
+ 2  1660                  9.08
+ 3  1661                  9.75
+ 4  1662                  9.5 
+ 5  1663                  8.58
+ 6  1664                  9.33
+ 7  1665                  8.25
+ 8  1666                  9.83
+ 9  1667                  8.5 
+10  1668                  9.5 
+# ℹ 352 more rows</code></pre>
 </div>
 </div>
 <p>or, we could calculate the average temperature for each month via;</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>historical_temperature <span class="sc">%&gt;%</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(month) <span class="sc">%&gt;%</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="st">"average temperature"</span><span class="ot">=</span><span class="fu">mean</span>(temperature, <span class="at">na.rm=</span><span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in historical_temperature %&gt;% group_by(month) %&gt;% summarise(`average temperature` = mean(temperature, : could not find function "%&gt;%"</code></pre>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>historical_temperature <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(month) <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="st">"average temperature"</span><span class="ot">=</span><span class="fu">mean</span>(temperature, <span class="at">na.rm=</span><span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 2
+   month `average temperature`
+   &lt;fct&gt;                 &lt;dbl&gt;
+ 1 JAN                    3.28
+ 2 FEB                    3.89
+ 3 MAR                    5.35
+ 4 APR                    7.95
+ 5 MAY                   11.2 
+ 6 JUN                   14.3 
+ 7 JUL                   16.0 
+ 8 AUG                   15.6 
+ 9 SEP                   13.3 
+10 OCT                    9.73
+11 NOV                    6.08
+12 DEC                    4.12</code></pre>
 </div>
 </div>
 </section>
@@ -304,22 +323,50 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="filtering-data">Filtering data</h3>
 <p>We can then use the <a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a>, also from dplyr, to filter observations (rows) before we group. For example, we could filter the years in the 18th Century (<code>year&lt;1800 &amp; year&gt;=1700</code>) and calculate the average monthly temperatures then via;</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>historical_temperature <span class="sc">%&gt;%</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(year<span class="sc">&lt;</span><span class="dv">1800</span> <span class="sc">&amp;</span> year<span class="sc">&gt;=</span><span class="dv">1700</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(month) <span class="sc">%&gt;%</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="st">"18th Century"</span><span class="ot">=</span><span class="fu">mean</span>(temperature, <span class="at">na.rm=</span><span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in historical_temperature %&gt;% filter(year &lt; 1800 &amp; year &gt;= 1700) %&gt;% : could not find function "%&gt;%"</code></pre>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>historical_temperature <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(year<span class="sc">&lt;</span><span class="dv">1800</span> <span class="sc">&amp;</span> year<span class="sc">&gt;=</span><span class="dv">1700</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(month) <span class="sc">%&gt;%</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="st">"18th Century"</span><span class="ot">=</span><span class="fu">mean</span>(temperature, <span class="at">na.rm=</span><span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 2
+   month `18th Century`
+   &lt;fct&gt;          &lt;dbl&gt;
+ 1 JAN             2.89
+ 2 FEB             3.80
+ 3 MAR             5.04
+ 4 APR             7.88
+ 5 MAY            11.3 
+ 6 JUN            14.5 
+ 7 JUL            16.0 
+ 8 AUG            15.8 
+ 9 SEP            13.5 
+10 OCT             9.40
+11 NOV             5.84
+12 DEC             3.89</code></pre>
 </div>
 </div>
 <p>We could then repeat this for the 21st Century…</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>historical_temperature <span class="sc">%&gt;%</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(year<span class="sc">&gt;=</span><span class="dv">2000</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(month) <span class="sc">%&gt;%</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="st">"21st Century"</span><span class="ot">=</span><span class="fu">mean</span>(temperature, <span class="at">na.rm=</span><span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in historical_temperature %&gt;% filter(year &gt;= 2000) %&gt;% group_by(month) %&gt;% : could not find function "%&gt;%"</code></pre>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>historical_temperature <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(year<span class="sc">&gt;=</span><span class="dv">2000</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(month) <span class="sc">%&gt;%</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="st">"21st Century"</span><span class="ot">=</span><span class="fu">mean</span>(temperature, <span class="at">na.rm=</span><span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 2
+   month `21st Century`
+   &lt;fct&gt;          &lt;dbl&gt;
+ 1 JAN             4.73
+ 2 FEB             4.93
+ 3 MAR             6.60
+ 4 APR             9.08
+ 5 MAY            12.0 
+ 6 JUN            14.9 
+ 7 JUL            16.8 
+ 8 AUG            16.4 
+ 9 SEP            14.3 
+10 OCT            11.2 
+11 NOV             7.44
+12 DEC             5.12</code></pre>
 </div>
 </div>
 <div id="exerciseN" class="callout callout-style-default callout-note no-icon callout-titled" title="Exercise">
@@ -350,129 +397,137 @@ Answer
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in library(tidyverse): there is no package called 'tidyverse'</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Load the data…</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>temperature <span class="ot">&lt;-</span> <span class="fu">read_table</span>(</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"https://raw.githubusercontent.com/Bristol-Training/intro-data-analysis-r/refs/heads/main/data/cetml1659on.txt"</span>,</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">skip=</span><span class="dv">6</span>,</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">na=</span><span class="fu">c</span>(<span class="st">"-99.99"</span>, <span class="st">"-99.9"</span>),</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">col_types=</span><span class="fu">cols</span>(<span class="st">"DATE"</span><span class="ot">=</span><span class="fu">col_integer</span>())</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in read_table("https://raw.githubusercontent.com/Bristol-Training/intro-data-analysis-r/refs/heads/main/data/cetml1659on.txt", : could not find function "read_table"</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>temperature <span class="ot">&lt;-</span> <span class="fu">read_table</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"https://raw.githubusercontent.com/Bristol-Training/intro-data-analysis-r/refs/heads/main/data/cetml1659on.txt"</span>,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">skip=</span><span class="dv">6</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">na=</span><span class="fu">c</span>(<span class="st">"-99.99"</span>, <span class="st">"-99.9"</span>),</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">col_types=</span><span class="fu">cols</span>(<span class="st">"DATE"</span><span class="ot">=</span><span class="fu">col_integer</span>())</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Create the month levels</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>month_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"JAN"</span>, <span class="st">"FEB"</span>, <span class="st">"MAR"</span>, <span class="st">"APR"</span>, <span class="st">"MAY"</span>, <span class="st">"JUN"</span>,</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"JUL"</span>, <span class="st">"AUG"</span>, <span class="st">"SEP"</span>, <span class="st">"OCT"</span>, <span class="st">"NOV"</span>, <span class="st">"DEC"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>month_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"JAN"</span>, <span class="st">"FEB"</span>, <span class="st">"MAR"</span>, <span class="st">"APR"</span>, <span class="st">"MAY"</span>, <span class="st">"JUN"</span>,</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"JUL"</span>, <span class="st">"AUG"</span>, <span class="st">"SEP"</span>, <span class="st">"OCT"</span>, <span class="st">"NOV"</span>, <span class="st">"DEC"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Tidy the data…</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>historical_temperature <span class="ot">&lt;-</span> temperature <span class="sc">%&gt;%</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>YEAR) <span class="sc">%&gt;%</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="fu">c</span>(<span class="st">"JAN"</span>, <span class="st">"FEB"</span>, <span class="st">"MAR"</span>, <span class="st">"APR"</span>, <span class="st">"MAY"</span>, <span class="st">"JUN"</span>,</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"JUL"</span>, <span class="st">"AUG"</span>, <span class="st">"SEP"</span>, <span class="st">"OCT"</span>, <span class="st">"NOV"</span>, <span class="st">"DEC"</span>),</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">names_to=</span><span class="st">"month"</span>,</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">values_to=</span><span class="st">"temperature"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">year=</span>DATE) <span class="sc">%&gt;%</span></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">month=</span><span class="fu">factor</span>(month, month_levels))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in temperature %&gt;% select(-YEAR) %&gt;% pivot_longer(c("JAN", "FEB", : could not find function "%&gt;%"</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>historical_temperature <span class="ot">&lt;-</span> temperature <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>YEAR) <span class="sc">%&gt;%</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="fu">c</span>(<span class="st">"JAN"</span>, <span class="st">"FEB"</span>, <span class="st">"MAR"</span>, <span class="st">"APR"</span>, <span class="st">"MAY"</span>, <span class="st">"JUN"</span>,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"JUL"</span>, <span class="st">"AUG"</span>, <span class="st">"SEP"</span>, <span class="st">"OCT"</span>, <span class="st">"NOV"</span>, <span class="st">"DEC"</span>),</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">names_to=</span><span class="st">"month"</span>,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">values_to=</span><span class="st">"temperature"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">year=</span>DATE) <span class="sc">%&gt;%</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">month=</span><span class="fu">factor</span>(month, month_levels))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Calculate the mean monthly temperatures in the 17th Century</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>c17th <span class="ot">&lt;-</span> historical_temperature <span class="sc">%&gt;%</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>     <span class="fu">filter</span>(year<span class="sc">&lt;</span><span class="dv">1700</span> <span class="sc">&amp;</span> year<span class="sc">&gt;=</span><span class="dv">1600</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">group_by</span>(month) <span class="sc">%&gt;%</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>     <span class="fu">summarise</span>(<span class="st">"temperature"</span><span class="ot">=</span><span class="fu">mean</span>(temperature, <span class="at">na.rm=</span><span class="cn">TRUE</span>), <span class="at">.groups=</span><span class="st">"drop"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in historical_temperature %&gt;% filter(year &lt; 1700 &amp; year &gt;= 1600) %&gt;% : could not find function "%&gt;%"</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>c17th <span class="ot">&lt;-</span> historical_temperature <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>     <span class="fu">filter</span>(year<span class="sc">&lt;</span><span class="dv">1700</span> <span class="sc">&amp;</span> year<span class="sc">&gt;=</span><span class="dv">1600</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">group_by</span>(month) <span class="sc">%&gt;%</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>     <span class="fu">summarise</span>(<span class="st">"temperature"</span><span class="ot">=</span><span class="fu">mean</span>(temperature, <span class="at">na.rm=</span><span class="cn">TRUE</span>), <span class="at">.groups=</span><span class="st">"drop"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>(the <code>.groups="drop"</code> removes a warning message in newer versions of R. It is experimental, e.g.&nbsp;see <a href="https://stackoverflow.com/questions/62140483/how-to-interpret-dplyr-message-summarise-regrouping-output-by-x-override">this stackoverflow post</a>)</p>
 <p>Calculate the mean monthly temperatures in the 21st Century</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>c21st <span class="ot">&lt;-</span> historical_temperature <span class="sc">%&gt;%</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>     <span class="fu">filter</span>(year<span class="sc">&gt;=</span><span class="dv">2000</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">group_by</span>(month) <span class="sc">%&gt;%</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>     <span class="fu">summarise</span>(<span class="st">"temperature"</span><span class="ot">=</span><span class="fu">mean</span>(temperature, <span class="at">na.rm=</span><span class="cn">TRUE</span>), <span class="at">.groups=</span><span class="st">"drop"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in historical_temperature %&gt;% filter(year &gt;= 2000) %&gt;% group_by(month) %&gt;% : could not find function "%&gt;%"</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>c21st <span class="ot">&lt;-</span> historical_temperature <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>     <span class="fu">filter</span>(year<span class="sc">&gt;=</span><span class="dv">2000</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">group_by</span>(month) <span class="sc">%&gt;%</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>     <span class="fu">summarise</span>(<span class="st">"temperature"</span><span class="ot">=</span><span class="fu">mean</span>(temperature, <span class="at">na.rm=</span><span class="cn">TRUE</span>), <span class="at">.groups=</span><span class="st">"drop"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now add the difference to the c21st table and print it out</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>c21st[<span class="st">"change"</span>] <span class="ot">&lt;-</span> c21st[<span class="st">"temperature"</span>] <span class="sc">-</span> c17th[<span class="st">"temperature"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'c21st' not found</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>c21st</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'c21st' not found</code></pre>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>c21st[<span class="st">"change"</span>] <span class="ot">&lt;-</span> c21st[<span class="st">"temperature"</span>] <span class="sc">-</span> c17th[<span class="st">"temperature"</span>]</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>c21st</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 3
+   month temperature change
+   &lt;fct&gt;       &lt;dbl&gt;  &lt;dbl&gt;
+ 1 JAN          4.73  2.16 
+ 2 FEB          4.93  2.00 
+ 3 MAR          6.60  1.96 
+ 4 APR          9.08  1.80 
+ 5 MAY         12.0   1.33 
+ 6 JUN         14.9   0.818
+ 7 JUL         16.8   1.12 
+ 8 AUG         16.4   1.26 
+ 9 SEP         14.3   1.71 
+10 OCT         11.2   1.91 
+11 NOV          7.44  1.91 
+12 DEC          5.12  1.76 </code></pre>
 </div>
 </div>
 <p>From this we can see that most of the warming is focused on the winter months.</p>
 <p>We will now repeat this for the maximum and minimum temperatures…</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>c17th_max <span class="ot">&lt;-</span> historical_temperature <span class="sc">%&gt;%</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>     <span class="fu">filter</span>(year<span class="sc">&lt;</span><span class="dv">1700</span> <span class="sc">&amp;</span> year<span class="sc">&gt;=</span><span class="dv">1600</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">group_by</span>(month) <span class="sc">%&gt;%</span></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>     <span class="fu">summarise</span>(<span class="st">"temperature"</span><span class="ot">=</span><span class="fu">max</span>(temperature, <span class="at">na.rm=</span><span class="cn">TRUE</span>), <span class="at">.groups=</span><span class="st">"drop"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in historical_temperature %&gt;% filter(year &lt; 1700 &amp; year &gt;= 1600) %&gt;% : could not find function "%&gt;%"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>c21st_max <span class="ot">&lt;-</span> historical_temperature <span class="sc">%&gt;%</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>     <span class="fu">filter</span>(year<span class="sc">&gt;=</span><span class="dv">2000</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">group_by</span>(month) <span class="sc">%&gt;%</span></span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>     <span class="fu">summarise</span>(<span class="st">"temperature"</span><span class="ot">=</span><span class="fu">max</span>(temperature, <span class="at">na.rm=</span><span class="cn">TRUE</span>), <span class="at">.groups=</span><span class="st">"drop"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in historical_temperature %&gt;% filter(year &gt;= 2000) %&gt;% group_by(month) %&gt;% : could not find function "%&gt;%"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>c21st_max[<span class="st">"change"</span>] <span class="ot">&lt;-</span> c21st_max[<span class="st">"temperature"</span>] <span class="sc">-</span> c17th_max[<span class="st">"temperature"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'c21st_max' not found</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>c21st_max</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'c21st_max' not found</code></pre>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>c17th_max <span class="ot">&lt;-</span> historical_temperature <span class="sc">%&gt;%</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>     <span class="fu">filter</span>(year<span class="sc">&lt;</span><span class="dv">1700</span> <span class="sc">&amp;</span> year<span class="sc">&gt;=</span><span class="dv">1600</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">group_by</span>(month) <span class="sc">%&gt;%</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>     <span class="fu">summarise</span>(<span class="st">"temperature"</span><span class="ot">=</span><span class="fu">max</span>(temperature, <span class="at">na.rm=</span><span class="cn">TRUE</span>), <span class="at">.groups=</span><span class="st">"drop"</span>)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>c21st_max <span class="ot">&lt;-</span> historical_temperature <span class="sc">%&gt;%</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>     <span class="fu">filter</span>(year<span class="sc">&gt;=</span><span class="dv">2000</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>     <span class="fu">group_by</span>(month) <span class="sc">%&gt;%</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>     <span class="fu">summarise</span>(<span class="st">"temperature"</span><span class="ot">=</span><span class="fu">max</span>(temperature, <span class="at">na.rm=</span><span class="cn">TRUE</span>), <span class="at">.groups=</span><span class="st">"drop"</span>)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>c21st_max[<span class="st">"change"</span>] <span class="ot">&lt;-</span> c21st_max[<span class="st">"temperature"</span>] <span class="sc">-</span> c17th_max[<span class="st">"temperature"</span>]</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>c21st_max</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 3
+   month temperature change
+   &lt;fct&gt;       &lt;dbl&gt;  &lt;dbl&gt;
+ 1 JAN           7    0.5  
+ 2 FEB           7    1    
+ 3 MAR           8.7  1.7  
+ 4 APR          11.8  2.3  
+ 5 MAY          13.4  0.400
+ 6 JUN          16.1 -1.90 
+ 7 JUL          19.7  1.7  
+ 8 AUG          18.3  1.3  
+ 9 SEP          16.8  1.8  
+10 OCT          13.3  1.8  
+11 NOV           9.6  1.6  
+12 DEC           9.7  3.2  </code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>c17th_min <span class="ot">&lt;-</span> historical_temperature <span class="sc">%&gt;%</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>     <span class="fu">filter</span>(year<span class="sc">&lt;</span><span class="dv">1700</span> <span class="sc">&amp;</span> year<span class="sc">&gt;=</span><span class="dv">1600</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">group_by</span>(month) <span class="sc">%&gt;%</span></span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>     <span class="fu">summarise</span>(<span class="st">"temperature"</span><span class="ot">=</span><span class="fu">min</span>(temperature, <span class="at">na.rm=</span><span class="cn">TRUE</span>), <span class="at">.groups=</span><span class="st">"drop"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in historical_temperature %&gt;% filter(year &lt; 1700 &amp; year &gt;= 1600) %&gt;% : could not find function "%&gt;%"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>c21st_min <span class="ot">&lt;-</span> historical_temperature <span class="sc">%&gt;%</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>     <span class="fu">filter</span>(year<span class="sc">&gt;=</span><span class="dv">2000</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">group_by</span>(month) <span class="sc">%&gt;%</span></span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>     <span class="fu">summarise</span>(<span class="st">"temperature"</span><span class="ot">=</span><span class="fu">min</span>(temperature, <span class="at">na.rm=</span><span class="cn">TRUE</span>), <span class="at">.groups=</span><span class="st">"drop"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in historical_temperature %&gt;% filter(year &gt;= 2000) %&gt;% group_by(month) %&gt;% : could not find function "%&gt;%"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>c21st_min[<span class="st">"change"</span>] <span class="ot">&lt;-</span> c21st_min[<span class="st">"temperature"</span>] <span class="sc">-</span> c17th_min[<span class="st">"temperature"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'c21st_min' not found</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>c21st_min</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'c21st_min' not found</code></pre>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>c17th_min <span class="ot">&lt;-</span> historical_temperature <span class="sc">%&gt;%</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>     <span class="fu">filter</span>(year<span class="sc">&lt;</span><span class="dv">1700</span> <span class="sc">&amp;</span> year<span class="sc">&gt;=</span><span class="dv">1600</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">group_by</span>(month) <span class="sc">%&gt;%</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>     <span class="fu">summarise</span>(<span class="st">"temperature"</span><span class="ot">=</span><span class="fu">min</span>(temperature, <span class="at">na.rm=</span><span class="cn">TRUE</span>), <span class="at">.groups=</span><span class="st">"drop"</span>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>c21st_min <span class="ot">&lt;-</span> historical_temperature <span class="sc">%&gt;%</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>     <span class="fu">filter</span>(year<span class="sc">&gt;=</span><span class="dv">2000</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>     <span class="fu">group_by</span>(month) <span class="sc">%&gt;%</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>     <span class="fu">summarise</span>(<span class="st">"temperature"</span><span class="ot">=</span><span class="fu">min</span>(temperature, <span class="at">na.rm=</span><span class="cn">TRUE</span>), <span class="at">.groups=</span><span class="st">"drop"</span>)</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>c21st_min[<span class="st">"change"</span>] <span class="ot">&lt;-</span> c21st_min[<span class="st">"temperature"</span>] <span class="sc">-</span> c17th_min[<span class="st">"temperature"</span>]</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>c21st_min</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 3
+   month temperature change
+   &lt;fct&gt;       &lt;dbl&gt;  &lt;dbl&gt;
+ 1 JAN           1.4    4.4
+ 2 FEB           2.8    3.8
+ 3 MAR           2.7    1.7
+ 4 APR           7.2    1.7
+ 5 MAY          10.4    1.9
+ 6 JUN          13.5    2  
+ 7 JUL          15.2    1.7
+ 8 AUG          14.9    1.9
+ 9 SEP          12.6    2.1
+10 OCT           9.2    2.7
+11 NOV           5.2    2.2
+12 DEC          -0.7   -0.2</code></pre>
 </div>
 </div>
 <p>Finally, we can get the average increase in monthly temperatures by calculating the mean of the <code>change</code> column in <code>c21st</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(c21st[[<span class="st">"change"</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'c21st' not found</code></pre>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(c21st[[<span class="st">"change"</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.643698</code></pre>
 </div>
 </div>
 </div>

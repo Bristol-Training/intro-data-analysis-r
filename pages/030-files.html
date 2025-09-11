@@ -253,18 +253,23 @@ year;London;Paris;Rome
 2015;8.615;;</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in library(tidyverse): there is no package called 'tidyverse'</code></pre>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.2
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.1.0     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
 </div>
 <p>We can use the <code>tidyverse</code> function <code>read_csv</code> to read the file and convert it to a <code>tibble</code>. The function <code>read_csv</code> is part of the <a href="https://readr.tidyverse.org">readr</a> package that is installed with the <code>tidyverse</code>.</p>
 <p>Full documentation for this function can be found in the manual or, as with any R function, directly in the notebook by putting a <code>?</code> before the name:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>?read_csv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>No documentation for 'read_csv' in specified packages and libraries:
-you could try '??read_csv'</code></pre>
-</div>
 </div>
 <p>The first argument to the function is called <code>file</code>, the documentation for which begins:</p>
 <pre><code>Either a path to a file, a connection, or literal data (either a single string or a raw vector).
@@ -274,10 +279,32 @@ with http://, https://, ftp://, or ftps:// will be automatically downloaded.
 Remote gz files can also be automatically downloaded and decompressed.</code></pre>
 <p>This means that we can take our URL and pass it directly (or via a variable) to the function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>city_pop_file <span class="ot">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/Bristol-Training/intro-data-analysis-r/refs/heads/main/data/city_pop.csv"</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">read_csv</span>(city_pop_file)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in read_csv(city_pop_file): could not find function "read_csv"</code></pre>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>city_pop_file <span class="ot">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/Bristol-Training/intro-data-analysis-r/refs/heads/main/data/city_pop.csv"</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">read_csv</span>(city_pop_file)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 11 Columns: 1
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (1): This is an example CSV file
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 11 × 1
+   `This is an example CSV file`                                        
+   &lt;chr&gt;                                                                
+ 1 The text at the top here is not part of the data but instead is here 
+ 2 to describe the file. You'll see this quite often in real-world data.
+ 3 A -1 signifies a missing value.                                      
+ 4 year;London;Paris;Rome                                               
+ 5 2001;7.322;2.148;2.547                                               
+ 6 2006;7.652;;2.627                                                    
+ 7 2008;-1;2.211;                                                       
+ 8 2009;-1;2.234;2.734                                                  
+ 9 2011;8.174;;                                                         
+10 2012;-1;2.244;2.627                                                  
+11 2015;8.615;;                                                         </code></pre>
 </div>
 </div>
 <p>We can see that by default it’s done a fairly bad job of parsing the file (this is mostly because I’ve construsted the <code>city_pop.csv</code> file to be as obtuse as possible). It’s making a lot of assumptions about the structure of the file but in general it’s taking quite a naïve approach.</p>
@@ -287,33 +314,93 @@ Remote gz files can also be automatically downloaded and decompressed.</code></p
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    city_pop_file,</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">skip=</span><span class="dv">5</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in read_csv(city_pop_file, skip = 5): could not find function "read_csv"</code></pre>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 7 Columns: 1
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (1): year;London;Paris;Rome
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 1
+  `year;London;Paris;Rome`
+  &lt;chr&gt;                   
+1 2001;7.322;2.148;2.547  
+2 2006;7.652;;2.627       
+3 2008;-1;2.211;          
+4 2009;-1;2.234;2.734     
+5 2011;8.174;;            
+6 2012;-1;2.244;2.627     
+7 2015;8.615;;            </code></pre>
 </div>
 </div>
 <p>The next most obvious problem is that it is not separating the columns at all. This is because <code>read_csv</code> is a special case of the more general <code>read_delim</code> that sets the separator (also called the delimiter) <code>delim</code> to a comma <code>,</code>.</p>
 <p>We can set the separator to <code>;</code> by changing to <code>read_delim</code> and setting <code>delim</code> equal to <code>;</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">read_delim</span>(</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    city_pop_file,</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">skip=</span><span class="dv">5</span>,</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">delim=</span><span class="st">";"</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in read_delim(city_pop_file, skip = 5, delim = ";"): could not find function "read_delim"</code></pre>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">read_delim</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    city_pop_file,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">skip=</span><span class="dv">5</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">delim=</span><span class="st">";"</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 7 Columns: 4
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ";"
+dbl (4): year, London, Paris, Rome
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 4
+   year London Paris  Rome
+  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1  2001   7.32  2.15  2.55
+2  2006   7.65 NA     2.63
+3  2008  -1     2.21 NA   
+4  2009  -1     2.23  2.73
+5  2011   8.17 NA    NA   
+6  2012  -1     2.24  2.63
+7  2015   8.62 NA    NA   </code></pre>
 </div>
 </div>
 <p>Now it’s actually starting to look like a real table of data.</p>
 <p>Reading the descriptive header of our data file we see that a value of <code>-1</code> signifies a missing reading so we should mark those too. This can be done after the fact but it is simplest to do it at import-time using the <code>na</code> argument:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">read_delim</span>(    </span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    city_pop_file,</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">skip=</span><span class="dv">5</span>,</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">delim=</span><span class="st">";"</span>,</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">na=</span><span class="st">"-1"</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in read_delim(city_pop_file, skip = 5, delim = ";", na = "-1"): could not find function "read_delim"</code></pre>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">read_delim</span>(    </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    city_pop_file,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">skip=</span><span class="dv">5</span>,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">delim=</span><span class="st">";"</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">na=</span><span class="st">"-1"</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details,
+e.g.:
+  dat &lt;- vroom(...)
+  problems(dat)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 7 Columns: 4
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ";"
+dbl (4): year, London, Paris, Rome
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 4
+   year London Paris  Rome
+  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1  2001   7.32  2.15  2.55
+2  2006   7.65 NA     2.63
+3  2008  NA     2.21 NA   
+4  2009  NA     2.23  2.73
+5  2011   8.17 NA    NA   
+6  2012  NA     2.24  2.63
+7  2015   8.62 NA    NA   </code></pre>
 </div>
 </div>
 <p>The next issue is that you can see that the year has been read in as a floating point (double) number, rather than as an integer. Each column is read using a parser, that converts the text data in the file into data of the appropriate type. R will guess which parser to use, with this helpfully reported to the R console:</p>
@@ -325,15 +412,30 @@ dbl (4): year, London, Paris, Rome</code></pre>
 <p>The <code>tidyverse</code> supplies many parsers, e.g.&nbsp;<code>parse_integer()</code>, <code>parse_date()</code> etc. More detail about these parsers (including how to parse different date formats, different number formats etc.) can be found in the free online book <a href="https://r4ds.hadley.nz/data-import.html">R for Data Science (2e) by Hadley Wickham, Mine Çetinkaya-Rundel and Garrett Grolemund</a>.</p>
 <p>You can set the parser to use for a column by specifying the column types via the <code>col_types</code> argument. We want the <code>year</code> to be an integer, so we can write:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">read_delim</span>(    </span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    city_pop_file,</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">skip=</span><span class="dv">5</span>,</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">delim=</span><span class="st">";"</span>,</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">na=</span><span class="st">"-1"</span>,</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">col_types=</span><span class="fu">cols</span>(<span class="st">"year"</span><span class="ot">=</span><span class="fu">col_integer</span>())</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in read_delim(city_pop_file, skip = 5, delim = ";", na = "-1", col_types = cols(year = col_integer())): could not find function "read_delim"</code></pre>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">read_delim</span>(    </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    city_pop_file,</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">skip=</span><span class="dv">5</span>,</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">delim=</span><span class="st">";"</span>,</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">na=</span><span class="st">"-1"</span>,</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">col_types=</span><span class="fu">cols</span>(<span class="st">"year"</span><span class="ot">=</span><span class="fu">col_integer</span>())</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details,
+e.g.:
+  dat &lt;- vroom(...)
+  problems(dat)</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 4
+   year London Paris  Rome
+  &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1  2001   7.32  2.15  2.55
+2  2006   7.65 NA     2.63
+3  2008  NA     2.21 NA   
+4  2009  NA     2.23  2.73
+5  2011   8.17 NA    NA   
+6  2012  NA     2.24  2.63
+7  2015   8.62 NA    NA   </code></pre>
 </div>
 </div>
 <p>Note that <code>col_guess()</code>, which guesses the right type of data, is used for any columns that you don’t specify.</p>
@@ -348,15 +450,18 @@ dbl (4): year, London, Paris, Rome</code></pre>
 2015    8.615   NA      NA</code></pre>
 <p>Finally, we want to assign this <code>tibble</code> to a variable, called <code>census</code>;</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>census <span class="ot">&lt;-</span> <span class="fu">read_delim</span>(</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    city_pop_file,</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">skip=</span><span class="dv">5</span>,</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">delim=</span><span class="st">";"</span>,</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">na=</span><span class="st">"-1"</span>,</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">col_types=</span><span class="fu">cols</span>(<span class="st">"year"</span><span class="ot">=</span><span class="fu">col_integer</span>())</span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in read_delim(city_pop_file, skip = 5, delim = ";", na = "-1", col_types = cols(year = col_integer())): could not find function "read_delim"</code></pre>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>census <span class="ot">&lt;-</span> <span class="fu">read_delim</span>(</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    city_pop_file,</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">skip=</span><span class="dv">5</span>,</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">delim=</span><span class="st">";"</span>,</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">na=</span><span class="st">"-1"</span>,</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">col_types=</span><span class="fu">cols</span>(<span class="st">"year"</span><span class="ot">=</span><span class="fu">col_integer</span>())</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details,
+e.g.:
+  dat &lt;- vroom(...)
+  problems(dat)</code></pre>
 </div>
 </div>
 <p>That covers the basics of reading in data with R. For more information please read the excellent free online book <a href="https://r4ds.hadley.nz/data-import.html">R for Data Science (2e) by Hadley Wickham, Mine Çetinkaya-Rundel and Garrett Grolemund</a>, check out the <a href="https://readr.tidyverse.org">documentation for readr</a>, or check out the really handy official <a href="https://github.com/rstudio/cheatsheets/blob/master/data-import.pdf">readr cheat sheet</a>.</p>
@@ -390,58 +495,84 @@ Answer (click to open)
 <div class="callout-body-container callout-body">
 <p>Import the <code>tidyverse</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in library(tidyverse): there is no package called 'tidyverse'</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Read in the file. As whitespace is the delimiter, we need to use <code>read_table</code>. Note that <code>read_delim</code> with <code>delim=" "</code> is the wrong choice as it will try to split on single whitespace characters. <code>read_table</code> is the right choice for multiple whitespace separators.</p>
 <p>Note that we should read the <code>DATE</code> as an integer, as it is a year.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>temperature <span class="ot">&lt;-</span> <span class="fu">read_table</span>(</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"https://raw.githubusercontent.com/Bristol-Training/intro-data-analysis-r/refs/heads/main/data/cetml1659on.txt"</span>,</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">skip=</span><span class="dv">6</span>,</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">na=</span><span class="fu">c</span>(<span class="st">"-99.99"</span>, <span class="st">"-99.9"</span>),</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">col_types=</span><span class="fu">cols</span>(<span class="st">"DATE"</span><span class="ot">=</span><span class="fu">col_integer</span>())</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in read_table("https://raw.githubusercontent.com/Bristol-Training/intro-data-analysis-r/refs/heads/main/data/cetml1659on.txt", : could not find function "read_table"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>temperature</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'temperature' not found</code></pre>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>temperature <span class="ot">&lt;-</span> <span class="fu">read_table</span>(</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"https://raw.githubusercontent.com/Bristol-Training/intro-data-analysis-r/refs/heads/main/data/cetml1659on.txt"</span>,</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">skip=</span><span class="dv">6</span>,</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">na=</span><span class="fu">c</span>(<span class="st">"-99.99"</span>, <span class="st">"-99.9"</span>),</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">col_types=</span><span class="fu">cols</span>(<span class="st">"DATE"</span><span class="ot">=</span><span class="fu">col_integer</span>())</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>temperature</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 362 × 14
+    DATE   JAN   FEB   MAR   APR   MAY   JUN   JUL   AUG   SEP   OCT   NOV   DEC
+   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1  1659     3     4     6     7    11    13    16    16    13    10     5     2
+ 2  1660     0     4     6     9    11    14    15    16    13    10     6     5
+ 3  1661     5     5     6     8    11    14    15    15    13    11     8     6
+ 4  1662     5     6     6     8    11    15    15    15    13    11     6     3
+ 5  1663     1     1     5     7    10    14    15    15    13    10     7     5
+ 6  1664     4     5     5     8    11    15    16    16    13     9     6     4
+ 7  1665     1     1     5     7    10    14    16    15    13     9     6     2
+ 8  1666     4     5     6     8    11    15    18    17    14    11     6     3
+ 9  1667     0     4     2     7    10    15    17    16    13     9     6     3
+10  1668     5     5     5     8    10    14    16    16    14    10     6     5
+# ℹ 352 more rows
+# ℹ 1 more variable: YEAR &lt;dbl&gt;</code></pre>
 </div>
 </div>
 <p>How many years had a negative average temperature in January?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>negative_jan <span class="ot">&lt;-</span> temperature <span class="sc">%&gt;%</span> <span class="fu">filter</span>(temperature[<span class="st">"JAN"</span>] <span class="sc">&lt;</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in temperature %&gt;% filter(temperature["JAN"] &lt; 0): could not find function "%&gt;%"</code></pre>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>negative_jan <span class="ot">&lt;-</span> temperature <span class="sc">%&gt;%</span> <span class="fu">filter</span>(temperature[<span class="st">"JAN"</span>] <span class="sc">&lt;</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using one column matrices in `filter()` was deprecated in dplyr 1.1.0.
+ℹ Please use one dimensional logical vectors instead.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>negative_jan</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'negative_jan' not found</code></pre>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>negative_jan</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 20 × 14
+    DATE   JAN   FEB   MAR   APR   MAY   JUN   JUL   AUG   SEP   OCT   NOV   DEC
+   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1  1684  -3    -1     3     6.5  13    15    16    15.5  12    11     3     4  
+ 2  1695  -1     0.5   3.5   5.5   9    13    13.5  13    11.5   9     5.5   4  
+ 3  1709  -1.5   2     3     9    12    14.5  15.5  15.5  13.5  10     7.5   3.5
+ 4  1716  -2     3     4.5   9    10.5  14    15.5  15.5  12.5   9.5   5.5   3  
+ 5  1740  -2.8  -1.6   3.9   6.4   8.6  12.8  15.3  14.7  14     5.3   3.3   2.2
+ 6  1763  -0.8   4.9   5.4   8.9  10.2  14.6  15.3  15.3  13.1   8.3   5.8   6.2
+ 7  1776  -1.6   3.8   6.4   9.4  10.8  14.1  16.3  15.2  12.9  10.2   6.2   4.4
+ 8  1780  -0.9   2.1   7.9   6.3  12.8  14.2  16.8  17.6  15.6   9.1   4.4   3.2
+ 9  1784  -0.6   1.4   2.7   5.7  13.5  13.7  15.2  14    14.8   7.8   5.5   0.3
+10  1795  -3.1   0.8   3.9   7.7  10.9  13.2  15.2  16.6  16    11.7   4.5   6.6
+11  1814  -2.9   1.4   2.9   9.6   9.2  12.2  16    14.7  12.8   8.1   4.7   4.3
+12  1820  -0.3   3.2   4.7   8.9  11.4  13.6  15.7  14.7  12.3   8.1   5.6   4.7
+13  1823  -0.1   3.1   5     6.7  12.2  12.3  14.1  14.4  12.5   8.4   7.1   4.8
+14  1830  -0.2   2.2   7.7   8.9  12    12.7  16.2  13.7  11.9  10.4   6.9   1.8
+15  1838  -1.5   0.4   4.9   6.1  10.5  14.4  15.6  15.1  12.7   9.8   4.6   4  
+16  1879  -0.7   3.1   4.7   5.7   8.9  12.9  13.6  14.5  12.6   8.9   4.1   0.7
+17  1881  -1.5   3.2   5.3   7.3  11.8  13.7  16.2  13.9  12.7   7.3   8.9   3.9
+18  1940  -1.4   2.6   6     8.7  12.5  16.4  15.1  15.6  12.8   9.6   6.9   3.8
+19  1963  -2.1  -0.7   6     8.7  10.6  14.9  15.2  14.3  12.9  11.1   8.2   2.6
+20  1979  -0.4   1.2   4.7   7.8  10    13.9  16.2  14.9  13.5  11.3   6.8   5.8
+# ℹ 1 more variable: YEAR &lt;dbl&gt;</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>num_negative_jan <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">count</span>(negative_jan))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in count(negative_jan): could not find function "count"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>num_negative_jan</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'num_negative_jan' not found</code></pre>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>num_negative_jan <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">count</span>(negative_jan))</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>num_negative_jan</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 20</code></pre>
 </div>
 </div>
 <p>What was the average temperature in June over the years in the data set?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>jun_average <span class="ot">&lt;-</span> <span class="fu">mean</span>(temperature[[<span class="st">"JUN"</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'temperature' not found</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>jun_average</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'jun_average' not found</code></pre>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>jun_average <span class="ot">&lt;-</span> <span class="fu">mean</span>(temperature[[<span class="st">"JUN"</span>]])</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>jun_average</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 14.33757</code></pre>
 </div>
 </div>
 <p>(note that we have to get the column data, and not a 1-column tibble, hence why we use <code>[[ ]]</code>)</p>

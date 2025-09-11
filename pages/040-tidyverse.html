@@ -238,14 +238,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div class="cell">
-<div class="cell-output cell-output-error">
-<pre><code>Error in library(tidyverse): there is no package called 'tidyverse'</code></pre>
-</div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in read_table("https://raw.githubusercontent.com/Bristol-Training/intro-data-analysis-r/refs/heads/main/data/cetml1659on.txt", : could not find function "read_table"</code></pre>
-</div>
-</div>
 <p>The <code>tidyverse</code> is founded on the philosophy of tidy data. This philosophy says that, if you format your data in a “tidy manner”, then this simplifies all later data manipulation and visualisation. The visualisation and data analysis functions in the <code>tidyverse</code> are thus built on the assumption that the data they process is “tidy”.</p>
 <p>So, what is “tidy data”. This is detailed very clearly in <a href="https://r4ds.hadley.nz/tidy-data.html">R for Data Science (2e) by Hadley Wickham, Mine Çetinkaya-Rundel and Garrett Grolemund</a>. In summary, “tidy data” follows three interrelated rules;</p>
 <ol type="1">
@@ -269,35 +261,61 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="select" class="level3">
 <h3 class="anchored" data-anchor-id="select"><code>select</code></h3>
 <p>The <a href="https://dplyr.tidyverse.org/reference/select.html">select</a> function makes it easier to select (or deselect) one or more columns (variables) from a tibble. The general format is:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> <span class="fu">select</span>(column_name)           <span class="co"># selects a single column</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(column1, column2))   <span class="co"># selects multiple column</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>column_name)          <span class="co">#&nbsp;selects all columns except a single column</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(column1, column2))  <span class="co"># selects except multiple columns</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> <span class="fu">select</span>(column_name)           <span class="co"># selects a single column</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(column1, column2))   <span class="co"># selects multiple column</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>column_name)          <span class="co">#&nbsp;selects all columns except a single column</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(column1, column2))  <span class="co"># selects except multiple columns</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>In our case, the <code>YEAR</code> column contains a derived value (the mean average) and should be removed as it is not a variable of an observation. We can do this using;</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>temperature <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>YEAR)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in temperature %&gt;% select(-YEAR): could not find function "%&gt;%"</code></pre>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>temperature <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>YEAR)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 362 × 13
+    DATE   JAN   FEB   MAR   APR   MAY   JUN   JUL   AUG   SEP   OCT   NOV   DEC
+   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1  1659     3     4     6     7    11    13    16    16    13    10     5     2
+ 2  1660     0     4     6     9    11    14    15    16    13    10     6     5
+ 3  1661     5     5     6     8    11    14    15    15    13    11     8     6
+ 4  1662     5     6     6     8    11    15    15    15    13    11     6     3
+ 5  1663     1     1     5     7    10    14    15    15    13    10     7     5
+ 6  1664     4     5     5     8    11    15    16    16    13     9     6     4
+ 7  1665     1     1     5     7    10    14    16    15    13     9     6     2
+ 8  1666     4     5     6     8    11    15    18    17    14    11     6     3
+ 9  1667     0     4     2     7    10    15    17    16    13     9     6     3
+10  1668     5     5     5     8    10    14    16    16    14    10     6     5
+# ℹ 352 more rows</code></pre>
 </div>
 </div>
 </section>
 <section id="pivoting-with-pivot_longer" class="level3">
 <h3 class="anchored" data-anchor-id="pivoting-with-pivot_longer">Pivoting with <code>pivot_longer</code></h3>
 <p>Next, we need to pivot (rotate) the table so that the observation for each month is on its own row in the table. We do this using the <a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a> function. You need to pass to this function the names of the columns that contain observations. These columns will become rows, with the value going into a new column named according to <code>values_to</code>, and the old column name moving into a new column named according to <code>names_to</code>, e.g.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pivot_longer</span>(<span class="fu">c</span>(<span class="st">"JAN"</span>, <span class="st">"FEB"</span>, <span class="st">"MAR"</span>), </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">names_to=</span><span class="st">"month"</span>,</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">values_to=</span><span class="st">"temperature"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pivot_longer</span>(<span class="fu">c</span>(<span class="st">"JAN"</span>, <span class="st">"FEB"</span>, <span class="st">"MAR"</span>), </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">names_to=</span><span class="st">"month"</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">values_to=</span><span class="st">"temperature"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>would move the values of the “JAN”, “FEB” and “MAR” columns into a new column called “temperature”, and the actual month names will be moved into a new column called “month”.</p>
 <p>For our data set, we would use;</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>temperature <span class="sc">%&gt;%</span> </span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>YEAR) <span class="sc">%&gt;%</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="fu">c</span>(<span class="st">"JAN"</span>, <span class="st">"FEB"</span>, <span class="st">"MAR"</span>, <span class="st">"APR"</span>, <span class="st">"MAY"</span>, <span class="st">"JUN"</span>,</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"JUL"</span>, <span class="st">"AUG"</span>, <span class="st">"SEP"</span>, <span class="st">"OCT"</span>, <span class="st">"NOV"</span>, <span class="st">"DEC"</span>),</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">names_to=</span><span class="st">"month"</span>,</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">values_to=</span><span class="st">"temperature"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in temperature %&gt;% select(-YEAR) %&gt;% pivot_longer(c("JAN", "FEB", : could not find function "%&gt;%"</code></pre>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>temperature <span class="sc">%&gt;%</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>YEAR) <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="fu">c</span>(<span class="st">"JAN"</span>, <span class="st">"FEB"</span>, <span class="st">"MAR"</span>, <span class="st">"APR"</span>, <span class="st">"MAY"</span>, <span class="st">"JUN"</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"JUL"</span>, <span class="st">"AUG"</span>, <span class="st">"SEP"</span>, <span class="st">"OCT"</span>, <span class="st">"NOV"</span>, <span class="st">"DEC"</span>),</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">names_to=</span><span class="st">"month"</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">values_to=</span><span class="st">"temperature"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4,344 × 3
+    DATE month temperature
+   &lt;int&gt; &lt;chr&gt;       &lt;dbl&gt;
+ 1  1659 JAN             3
+ 2  1659 FEB             4
+ 3  1659 MAR             6
+ 4  1659 APR             7
+ 5  1659 MAY            11
+ 6  1659 JUN            13
+ 7  1659 JUL            16
+ 8  1659 AUG            16
+ 9  1659 SEP            13
+10  1659 OCT            10
+# ℹ 4,334 more rows</code></pre>
 </div>
 </div>
 </section>
@@ -305,18 +323,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="renaming-columns">Renaming columns</h3>
 <p>Our data is now “tidy”. Each variable (DATE, month, temperature) has its own column, each observation has its own row, and each value has its own cell.</p>
 <p>However, “DATE” is a poor choice of name for the “year” variable. We can rename a column using the <a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a> function. The general format is;</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rename</span>(<span class="at">new_name=</span>old_name)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rename</span>(<span class="at">new_name=</span>old_name)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>and so, for our data we could use;</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>temperature <span class="sc">%&gt;%</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>YEAR) <span class="sc">%&gt;%</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="fu">c</span>(<span class="st">"JAN"</span>, <span class="st">"FEB"</span>, <span class="st">"MAR"</span>, <span class="st">"APR"</span>, <span class="st">"MAY"</span>, <span class="st">"JUN"</span>,</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"JUL"</span>, <span class="st">"AUG"</span>, <span class="st">"SEP"</span>, <span class="st">"OCT"</span>, <span class="st">"NOV"</span>, <span class="st">"DEC"</span>),</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">names_to=</span><span class="st">"month"</span>,</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">values_to=</span><span class="st">"temperature"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">year=</span>DATE)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in temperature %&gt;% select(-YEAR) %&gt;% pivot_longer(c("JAN", "FEB", : could not find function "%&gt;%"</code></pre>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>temperature <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>YEAR) <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="fu">c</span>(<span class="st">"JAN"</span>, <span class="st">"FEB"</span>, <span class="st">"MAR"</span>, <span class="st">"APR"</span>, <span class="st">"MAY"</span>, <span class="st">"JUN"</span>,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"JUL"</span>, <span class="st">"AUG"</span>, <span class="st">"SEP"</span>, <span class="st">"OCT"</span>, <span class="st">"NOV"</span>, <span class="st">"DEC"</span>),</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">names_to=</span><span class="st">"month"</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">values_to=</span><span class="st">"temperature"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">year=</span>DATE)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4,344 × 3
+    year month temperature
+   &lt;int&gt; &lt;chr&gt;       &lt;dbl&gt;
+ 1  1659 JAN             3
+ 2  1659 FEB             4
+ 3  1659 MAR             6
+ 4  1659 APR             7
+ 5  1659 MAY            11
+ 6  1659 JUN            13
+ 7  1659 JUL            16
+ 8  1659 AUG            16
+ 9  1659 SEP            13
+10  1659 OCT            10
+# ℹ 4,334 more rows</code></pre>
 </div>
 </div>
 </section>
@@ -326,36 +357,47 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>If there were any typos (e.g.&nbsp;“JULY” instead of “JUL”) then we would not see that error. Also, if we sorted by month then they would sort alphabetically (APR before JAN), instead of in the correct month order.</p>
 <p>To solve this, we need to convert the month into a factor. A factor is used to represent categorical data. A factor must have a value that corresponds to one of its levels. For example, lets now create the levels for a factor to represent months of the year;</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>month_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"JAN"</span>, <span class="st">"FEB"</span>, <span class="st">"MAR"</span>, <span class="st">"APR"</span>, <span class="st">"MAY"</span>, <span class="st">"JUN"</span>,</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"JUL"</span>, <span class="st">"AUG"</span>, <span class="st">"SEP"</span>, <span class="st">"OCT"</span>, <span class="st">"NOV"</span>, <span class="st">"DEC"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>month_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"JAN"</span>, <span class="st">"FEB"</span>, <span class="st">"MAR"</span>, <span class="st">"APR"</span>, <span class="st">"MAY"</span>, <span class="st">"JUN"</span>,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"JUL"</span>, <span class="st">"AUG"</span>, <span class="st">"SEP"</span>, <span class="st">"OCT"</span>, <span class="st">"NOV"</span>, <span class="st">"DEC"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This list of strings sets the valid values of the factor, and the order in which they should be arranged.</p>
 <p>To factor data, we use the <a href="https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/factor">factor</a> function which is included in base R. The general syntax is;</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">factor</span>(data, levels)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">factor</span>(data, levels)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This would return the passed <code>data</code> factored into one of the levels specified in <code>levels</code>.</p>
 <p>In our case, we will need to perform</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">factor</span>(data, month_levels)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">factor</span>(data, month_levels)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>one each of the values of the month variable for each observation.</p>
 <p>To do this, we need to edit our data to translate each month string into a month factor. Editing of a tibble is performed by the <a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a> function, e.g.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">temperature=</span>temperature<span class="sc">+</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">temperature=</span>temperature<span class="sc">+</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>would edit the “temperature” column variable, and add “5” to every single value in this column. In our case, we want to factor each value of the month column variable, so we need</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">month=</span><span class="fu">factor</span>(month, month_levels))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">month=</span><span class="fu">factor</span>(month, month_levels))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Putting this together with what we have before, and assigning the tibble to a new variable called <code>historical_temperature</code>, we now get;</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>historical_temperature <span class="ot">&lt;-</span> temperature <span class="sc">%&gt;%</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>YEAR) <span class="sc">%&gt;%</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="fu">c</span>(<span class="st">"JAN"</span>, <span class="st">"FEB"</span>, <span class="st">"MAR"</span>, <span class="st">"APR"</span>, <span class="st">"MAY"</span>, <span class="st">"JUN"</span>,</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"JUL"</span>, <span class="st">"AUG"</span>, <span class="st">"SEP"</span>, <span class="st">"OCT"</span>, <span class="st">"NOV"</span>, <span class="st">"DEC"</span>),</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">names_to=</span><span class="st">"month"</span>,</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">values_to=</span><span class="st">"temperature"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">year=</span>DATE) <span class="sc">%&gt;%</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">month=</span><span class="fu">factor</span>(month, month_levels))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in temperature %&gt;% select(-YEAR) %&gt;% pivot_longer(c("JAN", "FEB", : could not find function "%&gt;%"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>historical_temperature</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error: object 'historical_temperature' not found</code></pre>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>historical_temperature <span class="ot">&lt;-</span> temperature <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>YEAR) <span class="sc">%&gt;%</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="fu">c</span>(<span class="st">"JAN"</span>, <span class="st">"FEB"</span>, <span class="st">"MAR"</span>, <span class="st">"APR"</span>, <span class="st">"MAY"</span>, <span class="st">"JUN"</span>,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"JUL"</span>, <span class="st">"AUG"</span>, <span class="st">"SEP"</span>, <span class="st">"OCT"</span>, <span class="st">"NOV"</span>, <span class="st">"DEC"</span>),</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">names_to=</span><span class="st">"month"</span>,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">values_to=</span><span class="st">"temperature"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">year=</span>DATE) <span class="sc">%&gt;%</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">month=</span><span class="fu">factor</span>(month, month_levels))</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>historical_temperature</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4,344 × 3
+    year month temperature
+   &lt;int&gt; &lt;fct&gt;       &lt;dbl&gt;
+ 1  1659 JAN             3
+ 2  1659 FEB             4
+ 3  1659 MAR             6
+ 4  1659 APR             7
+ 5  1659 MAY            11
+ 6  1659 JUN            13
+ 7  1659 JUL            16
+ 8  1659 AUG            16
+ 9  1659 SEP            13
+10  1659 OCT            10
+# ℹ 4,334 more rows</code></pre>
 </div>
 </div>
 <p>As you can see, the data type for “month” is now “fct”, which is short for “factor”.</p>
