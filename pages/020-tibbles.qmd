@@ -4,7 +4,7 @@ title: Tibbles and filters
 
 
 
-As you may remember from the [Intermediate R workshop](https://bristol-training.github.io/intermediate-r/), R is great at representing and manipulating tabular data. In "traditional" R, this was handled in `data.frame`, while in modern "tidyverse" R this is handled via a `tibble`.
+As you may remember from the [Introduction to R (Part 2)](https://bristol-training.github.io/intro-r-2/), R is great at representing and manipulating tabular data. In "traditional" R, this was handled in `data.frame`, while in modern "tidyverse" R this is handled via a `tibble`.
 
 ```{r}
 library(tidyverse)
@@ -150,7 +150,7 @@ census %>% filter(City=="Paris")
 
 (note that we didn't need to put double quotes around `City` in the filter - 
 it knows that this is a column name. Also, 
-[look here](https://bristol-training.github.io/intermediate-r/pages/042-tidyverse-pipe.html) if you need
+[look here](https://bristol-training.github.io/intro-r-2/pages/042-tidyverse-pipe.html) if you need
 to refresh your knowledge of the `%>%` operator).
 
 This has returned a new `tibble`, which you can then access using the same
