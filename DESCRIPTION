@@ -8,11 +8,5 @@ Imports:
     quarto
     knitr
     rmarkdown
-    tibble
-    ggplot2
-    readr
-    lubridate
-    tidyr
-    dplyr
-    stringr
+    tidyverse
     
