@@ -32,7 +32,7 @@ website:
   page-footer:
     left: "[Jean Golding Institute](https://www.bristol.ac.uk/golding/) © [CC-BY 4.0](http://creativecommons.org/licenses/by/4.0/)"  
   repo-url: "https://github.com/bristol-training/intro-data-analysis-r"
-#  repo-actions: [edit, issue]
+  repo-actions: [edit, issue]
 
 format:
   html:
