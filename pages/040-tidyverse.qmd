@@ -22,7 +22,7 @@ and data analysis functions in the `tidyverse` are thus built on the
 assumption that the data they process is "tidy".
 
 So, what is "tidy data". This is detailed very clearly in 
-[R for Data Science (2e) by Hadley Wickham, Mine Çetinkaya-Rundel and Garrett Grolemund](https://r4ds.hadley.nz/tidy-data.html). In summary,
+[R for Data Science (2e) by Hadley Wickham, Mine Çetinkaya-Rundel and Garrett Grolemund](https://r4ds.hadley.nz/data-tidy.html#sec-tidy-data). In summary,
 "tidy data" follows three interrelated rules;
 
 1. Each variable has its own column
