@@ -163,7 +163,7 @@ Next, now that we have our dataset loaded, we will do something useful with our 
 
 
 ::: {#exerciseN .callout-note icon=false title='Exercise'}
-Read the file [cetml1659on.txt](https://raw.githubusercontent.com/Bristol-Training/intro-data-analysis-r/refs/heads/main/data/cetml1659on.txt) into a `tibble` (this data is originally from the [Met Office](https://www.metoffice.gov.uk/hadobs/hadcet/data/download.html) and there's [a description of the format there too](https://www.metoffice.gov.uk/hadobs/hadcet/data/monthly_format.html)). This contains some historical weather data for a location in the UK. Import that file as a `tibble` using [read_table](https://readr.tidyverse.org/reference/read_table.html), making sure that you cover all the possible `NA` values.
+Read the file [cetml1659on.txt](https://raw.githubusercontent.com/Bristol-Training/intro-data-analysis-r/refs/heads/main/data/cetml1659on.txt) into a `tibble` (this data is originally from the [Met Office](https://www.metoffice.gov.uk/hadobs/hadcet/data/download.html) and there's [a description of the format too](https://artefacts.ceda.ac.uk/badc_datadocs/cet/cethelp.html#mthly)). This contains some historical weather data for a location in the UK. Import that file as a `tibble` using [read_table](https://readr.tidyverse.org/reference/read_table.html), making sure that you cover all the possible `NA` values.
 
 How many years had a negative average temperature in January?
 
